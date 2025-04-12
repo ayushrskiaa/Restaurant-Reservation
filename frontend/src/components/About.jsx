@@ -13,13 +13,14 @@ const About = () => {
               <p>Serving the best food since ages</p>
             </div>
             <p className="mid">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Provident possimus optio adipisci dolores impedit illum iusto
-              perferendis, laudantium quod accusamus consequuntur consectetur,
-              tempore nulla error iure reiciendis dolorem assumenda.
-              Necessitatibus fugit asperiores totam rem esse exercitationem
-              iusto ipsum qui dolore ex, accusantium repellat mollitia
-              repellendus.
+              Welcome to our café, where every visit feels like home. We take
+              pride in serving freshly brewed coffee, handcrafted beverages, and
+              a menu filled with delicious dishes made from the finest
+              ingredients. Whether you are here for a quick bite, a relaxing
+              meal, or a place to work and unwind, our warm ambiance and
+              friendly staff are here to make your experience unforgettable.
+              Join us and savor the perfect blend of taste, comfort, and
+              community.
             </p>
             <Link to={"/"}>
               Explore Menu{" "}
@@ -29,7 +30,10 @@ const About = () => {
             </Link>
           </div>
           <div className="banner">
-            <img src="https://images.pexels.com/photos/12129480/pexels-photo-12129480.jpeg?auto=compress&cs=tinysrgb&w=600" alt="about" />
+            <img
+              src="https://images.pexels.com/photos/12129480/pexels-photo-12129480.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="about"
+            />
           </div>
         </div>
       </section>
