@@ -24,7 +24,7 @@
             {
                 "id": 1,
                 "image": "./dinner1.jpeg",
-                "title": "ROASTED LAMB RUMP",
+                "title": "ROASTED CHICKEN",
                 "category": "Dinner"
             },
             {
@@ -48,7 +48,7 @@
             {
                 "id": 5,
                 "image": "./lunch1.png",
-                "title": "BEEF BURGER MEAL",
+                "title": "BURGER MEAL",
                 "category": "Lunch"
             },
             {
