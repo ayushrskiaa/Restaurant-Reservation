@@ -10,9 +10,9 @@ dotenv.config({ path: "./config.env" });
 
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL],
-    methods: ["POST"],
-    credentials: true,
+    origin: "http://localhost:5173", // Allow requests from your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    credentials: true, // Allow cookies and credentials
   })
 );
 app.use(express.json());

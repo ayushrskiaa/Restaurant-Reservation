@@ -10,7 +10,7 @@ const About = () => {
           <div className="banner">
             <div className="top">
               <h1 className="heading">ABOUT US</h1>
-              <p>The only thing we are serious about is food.</p>
+              <p>Serving the best food since ages</p>
             </div>
             <p className="mid">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -29,7 +29,7 @@ const About = () => {
             </Link>
           </div>
           <div className="banner">
-            <img src="about.png" alt="about" />
+            <img src="about3.jpg" alt="about" />
           </div>
         </div>
       </section>

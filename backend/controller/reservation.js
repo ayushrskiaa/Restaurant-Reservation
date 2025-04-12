@@ -12,7 +12,7 @@ const send_reservation = async (req, res, next) => {
     await Reservation.create({ firstName, lastName, email, date, time, phone });
     res.status(201).json({
       success: true,
-      message: "Reservation Sent Successfully!",
+      message: "Reservation Sent Successfully!",      
     });
   } catch (error) {
     // Handle Mongoose validation errors

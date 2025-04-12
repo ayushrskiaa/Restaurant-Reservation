@@ -1,4 +1,8 @@
+// filepath: c:\Users\ayush\Desktop\coding\MERN-project\RESTAURANT_RESERVATION\backend\database\dbConnection.js
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables
 
 export const dbConnection = () => {
   console.log("MONGO_URI:", process.env.MONGO_URI);
