@@ -2,6 +2,8 @@ import { useState } from "react";
 import { data } from "../restApi.json";
 import { Link } from "react-scroll";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { HiOutlineShoppingCart } from "react-icons/hi";
+
 const Navbar = () => {
   const [show, setShow] = useState(false);
   return (
@@ -30,6 +32,19 @@ const Navbar = () => {
             className="menuBtn"
           >
             ORDER NOW
+          </Link>
+          <Link
+            to=""
+            spy={true}
+            smooth={true}
+            duration={500}
+            className="menuBtn"
+          >
+            ORDERS {" "}
+            <span>
+            <HiOutlineShoppingCart style={{ fontSize: "20px", marginTop:"1px" }} />
+
+            </span>
           </Link>
           <Link
             to="menu"

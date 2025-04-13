@@ -10,7 +10,9 @@ dotenv.config({ path: "./config.env" });
 
 app.use(
   cors({
-    origin: "https://restaurant-reservation-frontend-im0d.onrender.com/reservation", // Allow requests from your frontend
+    origin: "http://localhost:5173", // Allow requests from your frontend
+    //    origin: "https://restaurant-reservation-frontend-im0d.onrender.com/reservation",
+
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allow cookies and credentials
   })
