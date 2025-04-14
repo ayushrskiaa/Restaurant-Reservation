@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/reservation", reservationRouter);
-app.use("/api/v1/orders", orderRouter); // Use the correct order router
+app.use("/api/v1/Orders", orderRouter); // Use the correct order router
 app.get("/", (req, res, next) => {
   return res.status(200).json({
     success: true,

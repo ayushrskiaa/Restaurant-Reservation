@@ -4,9 +4,9 @@ import { Orders } from "../models/orderDine.js";
 export const send_Orders = async (req, res, next) => {
   console.log("Request Body:", req.body); // Log the request body for debugging
 
-  const { customerName, phoneNumber, items, totalPrice } = req.body;
+  const { customerName, phoneNumber, address, items, totalPrice, paymentMethod } = req.body;
 
-  if (!customerName || !phoneNumber || !items || !totalPrice) {
+  if (!customerName || !phoneNumber || !address || !items || !totalPrice || !paymentMethod) {
     return res.status(400).json({
       success: false,
       message: "Please fill in all required order details!",
@@ -14,7 +14,7 @@ export const send_Orders = async (req, res, next) => {
   }
 
   try {
-    const order = await Orders.create({ customerName, phoneNumber, items, totalPrice });
+    const order = await Orders.create({ customerName, phoneNumber, address, items, totalPrice, paymentMethod });
     res.status(201).json({
       success: true,
       message: "Order placed successfully!",

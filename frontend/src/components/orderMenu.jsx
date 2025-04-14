@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { data } from "../restApi.json";
 import { useNavigate } from "react-router-dom";
 
+
 const OrderMenu = ({ toggleSideMenu }) => {
   const [cart, setCart] = useState({});
   const navigate = useNavigate();

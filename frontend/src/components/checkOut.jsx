@@ -19,33 +19,61 @@ const CheckoutPage = () => {
       return;
     }
 
-    const items = Object.values(cart).map((item) => ({
-      id: item.id,
-      title: item.title,
-      price: Number(item.price) || 0, // Ensure price is a number
-      quantity: Number(item.quantity) || 0, // Ensure quantity is a number
-    }));
+    if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    if (address.length < 10) {
+      alert("Address must be at least 10 characters long.");
+      return;
+    }
+
+    if (Object.keys(cart).length === 0) {
+      alert(
+        "Your cart is empty. Please add items to your cart before placing an order."
+      );
+      return;
+    }
+
+    const items = Object.values(cart).map((item) => {
+      if (!item.id || !item.title || !item.price || !item.quantity) {
+        alert("Invalid item in cart. Please check your cart and try again.");
+        throw new Error("Invalid item in cart.");
+      }
+      return {
+        id: item.id,
+        title: item.title,
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 0,
+      };
+    });
 
     const totalAmount = Object.values(cart).reduce(
-      (total, item) => total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
+      (total, item) =>
+        total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
       0
     );
 
     console.log("Request Body:", {
       customerName,
       phoneNumber,
+      address,
       items,
       totalPrice: totalAmount,
+      paymentMethod,
     });
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/orders",
+        "http://localhost:5000/api/v1/Orders",
         {
           customerName,
           phoneNumber,
+          address,
           items,
           totalPrice: totalAmount,
+          paymentMethod,
         },
         {
           headers: {
@@ -62,7 +90,19 @@ const CheckoutPage = () => {
       });
     } catch (error) {
       console.error("Error Response:", error.response?.data);
-      toast.error(error.response?.data?.message || "Failed to place the order. Please try again.");
+
+      if (error.response?.status === 400) {
+        toast.error(
+          error.response.data.message ||
+            "Invalid order details. Please check your input."
+        );
+      } else if (error.response?.status === 500) {
+        toast.error("Server error. Please try again later.");
+      } else {
+        toast.error(
+          "Failed to place the order. Please check your internet connection and try again."
+        );
+      }
     }
   };
 
@@ -89,10 +129,14 @@ const CheckoutPage = () => {
             </li>
           ))}
         </ul>
-        <h3>Total: {Object.values(cart).reduce(
-          (total, item) => total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
-          0
-        )}</h3>
+        <h3>
+          Total:{" "}
+          {Object.values(cart).reduce(
+            (total, item) =>
+              total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
+            0
+          )}
+        </h3>
       </div>
       <div style={{ marginTop: "20px" }}>
         <h2>Delivery Details</h2>
