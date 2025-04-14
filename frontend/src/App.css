@@ -73,10 +73,7 @@ nav .menuBtn {
   font-size: 16px;
   margin-right: 12px;
 }
-nav .menuBtnOrder{
-  background: #eaff007a;
 
-}
 nav .menuBtn:hover {
   color: #fff;
   background: #222;
@@ -142,7 +139,8 @@ nav svg {
     text-align: center;
   }
   nav .menuBtn {
-    margin-top: 20px;
+    margin-top: 10px;
+    font-size: 1rem;
   }
 }
 @media (max-width: 800px) {

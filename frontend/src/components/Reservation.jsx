@@ -48,8 +48,10 @@ const Reservation = () => {
         </div>
         <div className="banner">
           <div className="reservation_form_box">
+          <h1>Want to celebrate your events?</h1>
             <h1>MAKE A RESERVATION</h1>
             <p>For Related Query, Please Call</p>
+            <p>+91 1234567890</p>
             <form onSubmit={handleReservation}>
               <div>
                 <input

@@ -3,6 +3,8 @@ import { data } from "../restApi.json";
 import { Link } from "react-scroll";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import { MdOutlineRestaurantMenu } from "react-icons/md"; // Import the icon
+import { MdOutlineDeliveryDining } from "react-icons/md"; // Import the icon
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -34,7 +36,7 @@ const Navbar = () => {
       if (newCart[item.id] && newCart[item.id].quantity > 0) {
         newCart[item.id].quantity -= 1;
         if (newCart[item.id].quantity === 0) {
-          delete newCart[item.id]; // Remove item if quantity is 0
+          delete newCart[item.id];
         }
       }
       console.log("Updated cart:", newCart); // Debugging
@@ -46,6 +48,11 @@ const Navbar = () => {
     <>
       <nav>
         <div className="logo">RSKIAA CAFE</div>
+
+        <button className="menuBtn " style={{border:"2px solid black"}} onClick={toggleSideMenu}>
+            <MdOutlineRestaurantMenu style={{ fontSize: "20px", marginRight: "5px",  }} />
+            DINE IN
+          </button>
         <div className={show ? "navLinks showmenu" : "navLinks"}>
           <div className="links">
             {data[0].navbarLinks.map((element) => (
@@ -60,22 +67,34 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-          <button className="menuBtn menuBtnOrder" onClick={toggleSideMenu}>
-            ORDER NOW
+          
+         
+
+          <button className="menuBtn " onClick={toggleSideMenu}>
+            <MdOutlineDeliveryDining style={{ fontSize: "20px", marginRight: "5px" }} />
+            ORDER ONLINE
           </button>
+          
+          <button className="menuBtn " onClick={toggleSideMenu}>
+            <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />
+            ORDERS
+          </button>
+
+
+          {/* <Link to="" spy={true} smooth={true} duration={500} className="menuBtn">
+          ORDERS{" "}
+          <span>
+            <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />  
+          </span>
+        </Link> */}
+          
+          
         </div>
         <div className="hamburger" onClick={() => setShow(!show)}>
           <GiHamburgerMenu />
         </div>
 
-        <Link to="" spy={true} smooth={true} duration={500} className="menuBtn">
-          ORDERS{" "}
-          <span>
-            <HiOutlineShoppingCart
-              style={{ fontSize: "20px", marginTop: "1px" }}
-            />
-          </span>
-        </Link>
+        
       </nav>
 
       {/* Side Menu */}
