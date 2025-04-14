@@ -1,36 +1,76 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios"; // Ensure axios is imported
+import toast from "react-hot-toast";
 
 const CheckoutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const cart = location.state?.cart || {};
 
+  const [customerName, setCustomerName] = useState(""); // Collect customer name
+  const [phoneNumber, setPhoneNumber] = useState(""); // Rename contact to phoneNumber
   const [address, setAddress] = useState("");
-  const [contact, setContact] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState(""); // State for payment method
+  const [paymentMethod, setPaymentMethod] = useState("");
 
-  const totalAmount = Object.values(cart).reduce(
-    (total, item) => total + (item.quantity || 0) * (item.price || 0),
-    0
-  );
-
-  const handlePlaceOrder = () => {
-    if (!address || !contact || !paymentMethod) {
-      alert("Please fill in your address, contact details, and select a payment method.");
+  const handlePlaceOrder = async () => {
+    if (!customerName || !phoneNumber || !address || !paymentMethod) {
+      alert("Please fill in all required fields.");
       return;
     }
 
-    navigate("/Success", {
-      state: { cart, address, contact, paymentMethod }, // Pass payment method to Success page
+    const items = Object.values(cart).map((item) => ({
+      id: item.id,
+      title: item.title,
+      price: Number(item.price) || 0, // Ensure price is a number
+      quantity: Number(item.quantity) || 0, // Ensure quantity is a number
+    }));
+
+    const totalAmount = Object.values(cart).reduce(
+      (total, item) => total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
+      0
+    );
+
+    console.log("Request Body:", {
+      customerName,
+      phoneNumber,
+      items,
+      totalPrice: totalAmount,
     });
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/v1/orders",
+        {
+          customerName,
+          phoneNumber,
+          items,
+          totalPrice: totalAmount,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Response Data:", data);
+      toast.success(data.message || "Order placed successfully!");
+      navigate("/Success", {
+        state: { customerName, phoneNumber, address, paymentMethod },
+      });
+    } catch (error) {
+      console.error("Error Response:", error.response?.data);
+      toast.error(error.response?.data?.message || "Failed to place the order. Please try again.");
+    }
   };
 
   return (
     <div
       style={{
         padding: "20px",
-        backgroundImage: "url('../public/background.svg')", // Replace with the path to your image
+        backgroundImage: "url('../background.svg')", // Replace with the path to your image
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
@@ -44,15 +84,56 @@ const CheckoutPage = () => {
           {Object.values(cart).map((item) => (
             <li key={item.id} style={{ marginBottom: "10px" }}>
               <div>
-                <strong>{item.title}</strong> - ₹{item.price} x {item.quantity}
+                <strong>{item.title}</strong> - {item.price} x {item.quantity}
               </div>
             </li>
           ))}
         </ul>
-        <h3>Total: ₹{totalAmount}</h3>
+        <h3>Total: {Object.values(cart).reduce(
+          (total, item) => total + (Number(item.quantity) || 0) * (Number(item.price) || 0),
+          0
+        )}</h3>
       </div>
       <div style={{ marginTop: "20px" }}>
         <h2>Delivery Details</h2>
+        <div style={{ marginBottom: "10px" }}>
+          <label style={{ color: "black" }}>
+            Customer Name:
+            <input
+              type="text"
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginTop: "5px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                backgroundColor: "transparent",
+              }}
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Enter your name"
+            />
+          </label>
+        </div>
+        <div style={{ marginBottom: "10px" }}>
+          <label style={{ color: "black" }}>
+            Phone Number:
+            <input
+              type="text"
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginTop: "5px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                backgroundColor: "transparent",
+              }}
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="Enter your phone number"
+            />
+          </label>
+        </div>
         <div style={{ marginBottom: "10px" }}>
           <label style={{ color: "black" }}>
             Address:
@@ -63,31 +144,11 @@ const CheckoutPage = () => {
                 marginTop: "5px",
                 borderRadius: "5px",
                 border: "1px solid #ccc",
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
               }}
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Enter your delivery address"
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label style={{ color: "black" }}>
-            Contact Number:
-            <input
-              type="text"
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginTop: "5px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-                backgroundColor: "transparent",
-
-              }}
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Enter your contact number"
             />
           </label>
         </div>
@@ -102,7 +163,6 @@ const CheckoutPage = () => {
                 borderRadius: "5px",
                 border: "1px solid #ccc",
                 backgroundColor: "transparent",
-
               }}
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
+import orderRouter from "./routes/orderRoute.js"; // Import the order router
 import { dbConnection } from "./database/dbConnection.js";
 
 const app = express();
@@ -11,7 +12,7 @@ dotenv.config({ path: "./config.env" });
 app.use(
   cors({
     origin: "http://localhost:5173", // Allow requests from your frontend
-    //    origin: "https://restaurant-reservation-frontend-im0d.onrender.com/reservation",
+    // origin: "https://restaurant-reservation-frontend-im0d.onrender.com/reservation",
 
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allow cookies and credentials
@@ -21,10 +22,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/reservation", reservationRouter);
-app.get("/", (req, res, next)=>{return res.status(200).json({
-  success: true,
-  message: "HELLO WORLD AGAIN"
-})})
+app.use("/api/v1/orders", orderRouter); // Use the correct order router
+app.get("/", (req, res, next) => {
+  return res.status(200).json({
+    success: true,
+    message: "HELLO WORLD AGAIN",
+  });
+});
 
 dbConnection();
 
