@@ -3,11 +3,13 @@ import { data } from "../restApi.json";
 import { Link } from "react-scroll";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const [sideMenuOpen, setSideMenuOpen] = useState(false); // State for side menu
   const [cart, setCart] = useState({}); // State for cart items with quantities
+  const navigate = useNavigate();
 
   const toggleSideMenu = () => {
     setSideMenuOpen(!sideMenuOpen);
@@ -58,16 +60,6 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-          {/* <Link
-            to="reservation"
-            spy={true}
-            smooth={true}
-            duration={500}
-            className="menuBtn"
-          >
-            ORDER NOW
-          </Link> */}
-
           <button className="menuBtn menuBtnOrder" onClick={toggleSideMenu}>
             ORDER NOW
           </button>
@@ -191,7 +183,6 @@ const Navbar = () => {
                 console.log("Item:", item); 
                 return total + (item.quantity * item.price || 0);
               }, 0)}
-
             </div>
             <button
               className="checkoutBtn"
@@ -204,7 +195,7 @@ const Navbar = () => {
                 cursor: "pointer",
                 fontSize: "16px",
               }}
-              onClick={() => alert("Proceeding to Checkout")}
+              onClick={() => navigate("/checkOut", { state: { cart } })} // Navigates to the checkout page
             >
               Checkout
             </button>

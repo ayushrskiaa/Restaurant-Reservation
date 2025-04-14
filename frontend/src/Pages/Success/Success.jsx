@@ -14,7 +14,7 @@ const Success = () => {
         }
         return preCount - 1;
       });
-    }, 1000);
+    }, 500);
     return () => clearInterval(timeoutId);
   }, [navigate]);
 
@@ -23,6 +23,7 @@ const Success = () => {
       <section className="notFound">
         <div className="container">
           <img src="/sandwich.png" alt="success" />
+          <h1>Order Placed Successfully!</h1>
           <h1>Redirecting to Home in {countdown} seconds...</h1>
           <Link to={"/"}>
             Back to Home <HiOutlineArrowNarrowRight />
