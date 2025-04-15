@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { data } from "../restApi.json";
 import { useNavigate } from "react-router-dom";
 
-
 const OrderMenu = ({ toggleSideMenu }) => {
   const [cart, setCart] = useState({});
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
       if (newCart[item.id]) {
         newCart[item.id].quantity += 1;
       } else {
-        newCart[item.id] = { ...item, quantity: 1, price: item.price || 0 }; // Ensure price is set
+        newCart[item.id] = { ...item, quantity: 1, price: item.price || 0 };
       }
       return newCart;
     });
@@ -26,12 +25,32 @@ const OrderMenu = ({ toggleSideMenu }) => {
       if (newCart[item.id] && newCart[item.id].quantity > 0) {
         newCart[item.id].quantity -= 1;
         if (newCart[item.id].quantity === 0) {
-          delete newCart[item.id]; // Remove item if quantity is 0
+          delete newCart[item.id];
         }
       }
       return newCart;
     });
   };
+
+  const handleCheckout = () => {
+    const total = Object.values(cart).reduce(
+      (sum, item) => sum + item.quantity * item.price,
+      0
+    );
+
+    // ✅ Navigate with both cart and calculated total
+    navigate("/checkOut", {
+      state: {
+        cart,
+        total,
+      },
+    });
+  };
+
+  const total = Object.values(cart).reduce(
+    (sum, item) => sum + item.quantity * item.price,
+    0
+  );
 
   return (
     <div
@@ -65,7 +84,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
               />
               <div>
                 <h3>{dish.title}</h3>
-                <p>Price {dish.price}</p>
+                <p>Price ₹{dish.price}</p>
               </div>
             </div>
             <div
@@ -131,11 +150,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
         }}
       >
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          Total: ₹
-          {Object.values(cart).reduce((total, item) => {
-            console.log("Item in cart:", item); // Debugging
-            return total + ((item.quantity || 0) * (item.price || 0));
-          }, 0)}
+          Total: ₹{total}
         </div>
         <button
           className="checkoutBtn"
@@ -148,7 +163,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
             cursor: "pointer",
             fontSize: "16px",
           }}
-          onClick={() => navigate("/checkOut", { state: { cart } })}
+          onClick={handleCheckout}
         >
           Checkout
         </button>
@@ -156,6 +171,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
     </div>
   );
 };
+
 OrderMenu.propTypes = {
   toggleSideMenu: PropTypes.func.isRequired,
 };

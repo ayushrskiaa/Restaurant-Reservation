@@ -8,8 +8,8 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const cart = location.state?.cart || {};
 
-  const [customerName, setCustomerName] = useState(""); // Collect customer name
-  const [phoneNumber, setPhoneNumber] = useState(""); // Rename contact to phoneNumber
+  const [customerName, setCustomerName] = useState(""); 
+  const [phoneNumber, setPhoneNumber] = useState(""); 
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
@@ -214,9 +214,9 @@ const CheckoutPage = () => {
               <option value="" disabled>
                 Select a payment method
               </option>
-              <option value="Credit Card">Credit Card</option>
-              <option value="Debit Card">Debit Card</option>
-              <option value="Net Banking">Net Banking</option>
+              <option value="Credit Card" disabled>Credit Card</option>
+              <option value="Debit Card" disabled>Debit Card</option>
+              <option value="Net Banking" disabled>Net Banking</option>
               <option value="UPI">UPI</option>
               <option value="Cash on Delivery">Cash on Delivery</option>
             </select>
