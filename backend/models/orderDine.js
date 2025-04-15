@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     maxLength: [10, "Phone number must be 10 digits."],
   },
   address: {
-    type: String, // Add the address field
+    type: String,
     required: true,
     minLength: [10, "Address must be at least 10 characters long."],
     maxLength: [200, "Address cannot exceed 200 characters."],
@@ -24,12 +24,10 @@ const orderSchema = new mongoose.Schema({
       id: {
         type: String,
         required: [true, "Item ID is required."],
-        default: "unknown", // Optional default value
       },
       title: {
         type: String,
         required: [true, "Item title is required."],
-        default: "Untitled", // Optional default value
       },
       price: {
         type: Number,
@@ -51,7 +49,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ["Credit Card", "Debit Card", "Net Banking", "UPI", "Cash on Delivery"], // Restrict to valid payment methods
+    enum: ["Credit Card", "Debit Card", "Net Banking", "UPI", "Cash on Delivery"],
     default: "Cash on Delivery",
   },
   createdAt: {

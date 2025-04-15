@@ -13,7 +13,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
       if (newCart[item.id]) {
         newCart[item.id].quantity += 1;
       } else {
-        newCart[item.id] = { ...item, quantity: 1, price: item.price || 0 };
+        newCart[item.id] = { ...item, quantity: 1 };
       }
       return newCart;
     });
@@ -38,7 +38,6 @@ const OrderMenu = ({ toggleSideMenu }) => {
       0
     );
 
-    // ✅ Navigate with both cart and calculated total
     navigate("/checkOut", {
       state: {
         cart,
