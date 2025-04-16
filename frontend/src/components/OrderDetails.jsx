@@ -13,7 +13,8 @@ const OrderDetails = ({ toggleOrderDetails }) => {
   const fetchOrdersByPhone = async (phone) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/history/user/${phone}`);
+      // const response = await axios.get(`http://localhost:5000/api/history/user/${phone}`);
+      const response = await axios.get(`https://restaurant-reservation-g30q.onrender.com/${phone}`);
       if (response.data.success) {
         setOrders(response.data.orders);
         setShowPhoneInput(false);
