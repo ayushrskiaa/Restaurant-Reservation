@@ -23,12 +23,7 @@ const Reservation = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-<<<<<<< HEAD
         `${BASE_URL}/api/v1/reservation`,
-=======
-        // "http://localhost:5000/api/v1/reservation",
-        "https://restaurant-reservation-g30q.onrender.com",
->>>>>>> 57bf7a8e7eb1b6e25d7cd22fd98b1085b2bf7f31
         { firstName, lastName, email, phone, date, time },
         {
           headers: {
