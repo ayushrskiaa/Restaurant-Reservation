@@ -97,120 +97,125 @@ const CheckoutPage = () => {
         backgroundPosition: "center",
         minHeight: "100vh",
         color: "black",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      <h1>Checkout</h1>
-      <div>
-        <h2>Order Summary</h2>
-        <ul>
-          {Object.values(cart).map((item) => (
-            <li key={item.id} style={{ marginBottom: "10px" }}>
-              <div>
-                <strong>{item.title}</strong> - ₹{item.price} x {item.quantity}
-              </div>
-            </li>
-          ))}
-        </ul>
-        <h3>Total: ₹{total}</h3> {/* Display the total passed from OrderMenu */}
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <h2>Delivery Details</h2>
-        <form onSubmit={handlePlaceOrder}>
-          <div style={{ marginBottom: "10px" }}>
-            <label style={{ color: "black" }}>
-              Customer Name:
-              <input
-                type="text"
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  marginTop: "5px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  backgroundColor: "transparent",
-                }}
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Enter your name"
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label style={{ color: "black" }}>
-              Phone Number:
-              <input
-                type="text"
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  marginTop: "5px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  backgroundColor: "transparent",
-                }}
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="Enter your phone number"
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label style={{ color: "black" }}>
-              Address:
-              <textarea
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  marginTop: "5px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  backgroundColor: "transparent",
-                }}
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter your delivery address"
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Payment Method:
-              <select
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  marginTop: "5px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  backgroundColor: "transparent",
-                }}
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select a payment method
-                </option>
-                <option value="UPI">UPI</option>
-                <option value="Cash on Delivery">Cash on Delivery</option>
-              </select>
-            </label>
-          </div>
-          <button
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontSize: "16px",
-              marginTop: "20px",
-            }}
-            type="submit"
-          >
-            Place Order
-          </button>
-        </form>
+      <div style={{ maxWidth: "800px", width: "100%" }}>
+        <h1 style={{ textAlign: "center" }}>Checkout</h1>
+        <div>
+          <h2>Order Summary</h2>
+          <ul style={{ padding: "0", listStyleType: "none" }}>
+            {Object.values(cart).map((item) => (
+              <li key={item.id} style={{ marginBottom: "10px" }}>
+                <div>
+                  <strong>{item.title}</strong> - ₹{item.price} x {item.quantity}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <h3>Total: ₹{total}</h3>
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          <h2>Delivery Details</h2>
+          <form onSubmit={handlePlaceOrder}>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ color: "black" }}>
+                Customer Name:
+                <input
+                  type="text"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    marginTop: "5px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                    backgroundColor: "transparent",
+                  }}
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="Enter your name"
+                />
+              </label>
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ color: "black" }}>
+                Phone Number:
+                <input
+                  type="text"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    marginTop: "5px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                    backgroundColor: "transparent",
+                  }}
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="Enter your phone number"
+                />
+              </label>
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label style={{ color: "black" }}>
+                Address:
+                <textarea
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    marginTop: "5px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                    backgroundColor: "transparent",
+                  }}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter your delivery address"
+                />
+              </label>
+            </div>
+            <div style={{ marginBottom: "10px" }}>
+              <label>
+                Payment Method:
+                <select
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    marginTop: "5px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                    backgroundColor: "transparent",
+                  }}
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select a payment method
+                  </option>
+                  <option value="UPI">UPI</option>
+                  <option value="Cash on Delivery">Cash on Delivery</option>
+                </select>
+              </label>
+            </div>
+            <button
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#4CAF50",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "16px",
+                marginTop: "20px",
+              }}
+              type="submit"
+            >
+              Place Order
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

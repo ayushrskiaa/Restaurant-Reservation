@@ -27,56 +27,56 @@
           "image": "https://images.pexels.com/photos/12129480/pexels-photo-12129480.jpeg?auto=compress&cs=tinysrgb&w=900",
           "title": "CHICKEN BURGER",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 2,
           "image": "https://images.pexels.com/photos/4669301/pexels-photo-4669301.jpeg?auto=compress&cs=tinysrgb&w=600",
           "title": "Sandwich and Fries",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 3,
           "image": "https://images.pexels.com/photos/30504705/pexels-photo-30504705/free-photo-of-delicious-pepperoni-pizza-on-wooden-board.jpeg?auto=compress&cs=tinysrgb&w=600",
           "title": "Delicious Pepperoni Pizza",
           "category": "Breakfast",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 4,
           "image": "https://images.pexels.com/photos/15955381/pexels-photo-15955381/free-photo-of-coffee-and-cheeseburger.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
           "title": "Coffee and Cheeseburger",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 5,
           "image": "https://images.pexels.com/photos/14678998/pexels-photo-14678998.jpeg?auto=compress&cs=tinysrgb&w=600",
           "title": "BURGER MEAL",
           "category": "Lunch",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 6,
           "image": "https://images.pexels.com/photos/12318206/pexels-photo-12318206.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
           "title": "Pani Puri",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 7,
           "image": "https://images.pexels.com/photos/14686443/pexels-photo-14686443.jpeg?auto=compress&cs=tinysrgb&w=600",
           "title": "Chicken Nuggets",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         },
         {
           "id": 8,
           "image": "https://images.pexels.com/photos/6485578/pexels-photo-6485578.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
           "title": "Potato Chips",
           "category": "Dinner",
-          "price": "₹100.00"
+          "price": "100.00"
         }
       ],
       "team": [

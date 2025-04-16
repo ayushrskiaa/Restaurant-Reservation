@@ -10,10 +10,17 @@ const OrderMenu = ({ toggleSideMenu }) => {
   const addToCart = (item) => {
     setCart((prevCart) => {
       const newCart = { ...prevCart };
+      // Extract numeric value from price string
+      const numericPrice = parseFloat(item.price.replace('₹', '').replace(',', ''));
+      
       if (newCart[item.id]) {
         newCart[item.id].quantity += 1;
       } else {
-        newCart[item.id] = { ...item, quantity: 1 };
+        newCart[item.id] = { 
+          ...item, 
+          quantity: 1,
+          price: numericPrice // Store the numeric price in cart
+        };
       }
       return newCart;
     });
@@ -37,6 +44,9 @@ const OrderMenu = ({ toggleSideMenu }) => {
       (sum, item) => sum + item.quantity * item.price,
       0
     );
+
+    console.log("Cart being sent to checkout:", cart);
+    console.log("Total being sent to checkout:", total);
 
     navigate("/checkOut", {
       state: {
@@ -83,7 +93,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
               />
               <div>
                 <h3>{dish.title}</h3>
-                <p>Price ₹{dish.price}</p>
+                <p>Price {dish.price}</p>
               </div>
             </div>
             <div
@@ -149,7 +159,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
         }}
       >
         <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-          Total: ₹{total}
+          Total: ₹{total.toFixed(2)}
         </div>
         <button
           className="checkoutBtn"
