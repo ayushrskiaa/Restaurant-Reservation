@@ -1,6 +1,6 @@
 // filepath: c:\Users\ayush\Desktop\coding\MERN-project\RESTAURANT_RESERVATION\backend\routes\orderRoute.js
 import express from "express";
-import { send_Orders } from "../controller/order.js"; // Use named import
+import { send_Orders } from "../controller/orderShow.js"; // Use named import
 
 const router = express.Router();
 

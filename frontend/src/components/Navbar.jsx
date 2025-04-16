@@ -5,9 +5,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { MdOutlineDeliveryDining } from "react-icons/md";
-// import { useNavigate } from "react-router-dom";
-import OrderMenu from "./orderMenu"; // Import the new component
-import OrderDetails from "./OrderDetails"; // Import the OrderDetails component
+import OrderMenu from "./orderMenu";
+import OrderDetails from "./OrderDetails";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
