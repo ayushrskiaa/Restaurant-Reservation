@@ -13,11 +13,10 @@ const Reservation = () => {
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
 
-  // Set the base URL based on the hostname
   const BASE_URL =
     window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://restaurant-reservation-g30q.onrender.com";
+      ? import.meta.env.VITE_BASE_URL
+      : import.meta.env.VITE_PRODUCTION_URL;
 
   const handleReservation = async (e) => {
     e.preventDefault();

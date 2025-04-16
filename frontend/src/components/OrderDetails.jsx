@@ -9,23 +9,22 @@ const OrderDetails = ({ toggleOrderDetails }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPhoneInput, setShowPhoneInput] = useState(true);
 
-  // Set the base URL based on the hostname
+  // Use environment variables for the base URL
   const BASE_URL =
     window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://restaurant-reservation-g30q.onrender.com";
+      ? import.meta.env.VITE_BASE_URL
+      : import.meta.env.VITE_PRODUCTION_URL;
 
   const fetchOrdersByPhone = async (phone) => {
     try {
-      setLoading(true); // Start loading
-      setError(null); // Clear any previous errors
-
-      // Make the API request using axios
+      setLoading(true); 
+      setError(null); 
+  
       const response = await axios.get(`${BASE_URL}/api/history/user/${phone}`, {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true, // Include credentials if needed
+        withCredentials: true, 
       });
 
       // Handle the response
