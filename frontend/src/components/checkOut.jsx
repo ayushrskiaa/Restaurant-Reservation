@@ -16,6 +16,12 @@ const CheckoutPage = () => {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  // Set the base URL based on the hostname
+  const BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://restaurant-reservation-g30q.onrender.com";
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
@@ -56,7 +62,7 @@ const CheckoutPage = () => {
     // Send data to the backend
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/Orders",
+        `${BASE_URL}/api/v1/Orders`,
         {
           customerName,
           phoneNumber,

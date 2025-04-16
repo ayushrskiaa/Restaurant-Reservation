@@ -13,12 +13,17 @@ const Reservation = () => {
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
 
+  // Set the base URL based on the hostname
+  const BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://restaurant-reservation-g30q.onrender.com";
+
   const handleReservation = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/reservation",
-        //"https://restaurant-reservation-g30q.onrender.com",
+        `${BASE_URL}/api/v1/reservation`,
         { firstName, lastName, email, phone, date, time },
         {
           headers: {
@@ -48,7 +53,7 @@ const Reservation = () => {
         </div>
         <div className="banner">
           <div className="reservation_form_box">
-          <h1>Want to celebrate your events?</h1>
+            <h1>Want to celebrate your events?</h1>
             <h1>MAKE A RESERVATION</h1>
             <p>For Related Query, Please Call</p>
             <p>+91 1234567890</p>

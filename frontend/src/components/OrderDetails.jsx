@@ -1,5 +1,4 @@
-import { useState} from "react";
-// import {useEffect} from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -10,10 +9,16 @@ const OrderDetails = ({ toggleOrderDetails }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPhoneInput, setShowPhoneInput] = useState(true);
 
+  // Set the base URL based on the hostname
+  const BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://restaurant-reservation-g30q.onrender.com";
+
   const fetchOrdersByPhone = async (phone) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/history/user/${phone}`);
+      const response = await axios.get(`${BASE_URL}/api/history/user/${phone}`);
       if (response.data.success) {
         setOrders(response.data.orders);
         setShowPhoneInput(false);
@@ -36,14 +41,6 @@ const OrderDetails = ({ toggleOrderDetails }) => {
       setError("Please enter a valid 10-digit phone number.");
     }
   };
-
-  // useEffect(() => {
-  //   const savedPhone = localStorage.getItem('userPhone');
-  //   if (savedPhone) {
-  //     setPhoneNumber(savedPhone);
-  //     fetchOrdersByPhone(savedPhone);
-  //   }
-  // }, []);
 
   return (
     <div
