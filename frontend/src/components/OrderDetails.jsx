@@ -17,24 +17,29 @@ const OrderDetails = ({ toggleOrderDetails }) => {
 
   const fetchOrdersByPhone = async (phone) => {
     try {
-      setLoading(true);
-<<<<<<< HEAD
-      const response = await axios.get(`${BASE_URL}/api/history/user/${phone}`);
-=======
-      // const response = await axios.get(`http://localhost:5000/api/history/user/${phone}`);
-      const response = await axios.get(`https://restaurant-reservation-g30q.onrender.com/${phone}`);
->>>>>>> 57bf7a8e7eb1b6e25d7cd22fd98b1085b2bf7f31
+      setLoading(true); // Start loading
+      setError(null); // Clear any previous errors
+
+      // Make the API request using axios
+      const response = await axios.get(`${BASE_URL}/api/history/user/${phone}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // Include credentials if needed
+      });
+
+      // Handle the response
       if (response.data.success) {
-        setOrders(response.data.orders);
-        setShowPhoneInput(false);
+        setOrders(response.data.orders); // Set the orders
+        setShowPhoneInput(false); // Hide the phone input
       } else {
-        setError("No orders found for this phone number.");
+        setError("No orders found for this phone number."); // Handle no orders case
       }
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching orders:", err);
-      setError("Failed to load orders. Please try again later.");
-      setLoading(false);
+      setError("Failed to load orders. Please try again later."); // Handle errors
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
