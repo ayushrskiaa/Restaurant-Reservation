@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
+// import {useEffect} from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -36,13 +37,13 @@ const OrderDetails = ({ toggleOrderDetails }) => {
     }
   };
 
-  useEffect(() => {
-    const savedPhone = localStorage.getItem('userPhone');
-    if (savedPhone) {
-      setPhoneNumber(savedPhone);
-      fetchOrdersByPhone(savedPhone);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedPhone = localStorage.getItem('userPhone');
+  //   if (savedPhone) {
+  //     setPhoneNumber(savedPhone);
+  //     fetchOrdersByPhone(savedPhone);
+  //   }
+  // }, []);
 
   return (
     <div
