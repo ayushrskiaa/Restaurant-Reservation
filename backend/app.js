@@ -3,14 +3,19 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
-import orderRouter from "./routes/orderRoute.js"; // Import the order router
-import historyRouter from "./routes/historyRoutes.js"; // Import the history router
+import orderRouter from "./routes/orderRoute.js"; 
+import historyRouter from "./routes/historyRoutes.js";
 import { dbConnection } from "./database/dbConnection.js";
 
 const app = express();
 dotenv.config({ path: "./config.env" });
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://restaurant-reservation-ruddy-delta.vercel.app', 'http://localhost:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
