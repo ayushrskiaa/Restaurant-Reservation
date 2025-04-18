@@ -11,7 +11,7 @@ const app = express();
 dotenv.config({ path: "./config.env" });
 
 app.use(cors({
-  origin: ['https://restaurant-reservation-ruddy-delta.vercel.app', 'http://localhost:5173'],
+  origin: ['https://restaurant-reservation-tau.vercel.app', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
