@@ -10,14 +10,7 @@ import { dbConnection } from "./database/dbConnection.js";
 const app = express();
 dotenv.config({ path: "./config.env" });
 
-const corsOptions = {
-  origin: process.env.NODE_ENV === "production"
-    ? "https://restaurant-reservation-ruddy-delta.vercel.app/"
-    : "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
