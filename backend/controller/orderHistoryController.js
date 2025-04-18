@@ -44,6 +44,7 @@ export const createOrderHistory = async (req, res, next) => {
 export const getUserOrderHistory = async (req, res) => {
   try {
     const { phoneNumber } = req.params;
+    console.log("Fetching orders for phone number:", phoneNumber);
 
     if (!phoneNumber) {
       return res.status(400).json({
