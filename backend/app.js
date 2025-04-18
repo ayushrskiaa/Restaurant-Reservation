@@ -12,7 +12,7 @@ dotenv.config({ path: "./config.env" });
 
 const corsOptions = {
   origin: process.env.NODE_ENV === "production"
-    ? "https://restaurant-reservation-frontend-im0d.onrender.com"
+    ? "https://restaurant-reservation-ruddy-delta.vercel.app/"
     : "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
