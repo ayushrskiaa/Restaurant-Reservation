@@ -72,7 +72,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
         height: "100%",
         backgroundColor: "#f9f9f9",
         overflowY: "auto",
-        boxShadow: "-2px 0 5px rgba(0, 0, 0, 0.1)",
+        boxShadow: "-2px 0 5px rgba(14, 12, 12, 0.1)",
       }}
     >
       <button className="closeBtn" onClick={toggleSideMenu}>

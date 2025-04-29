@@ -9,9 +9,6 @@ const OrderDetails = ({ toggleOrderDetails }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPhoneInput, setShowPhoneInput] = useState(true);
 
-
-
-
   
   // Use environment variables for the base URL
   const BASE_URL =
