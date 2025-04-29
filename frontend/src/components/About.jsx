@@ -10,7 +10,7 @@ const About = () => {
           <div className="banner">
             <div className="top">
               <h1 className="heading">ABOUT US</h1>
-              <p>Serving the best food since ages</p>
+              <p>Serving the best food </p>
             </div>
             <p className="mid">
               Welcome to our café, where every visit feels like home. We take
