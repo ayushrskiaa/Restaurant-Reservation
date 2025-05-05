@@ -1,14 +1,12 @@
 const Order = require('../models/orderModel');
 
-// Get all orders for a specific user
 exports.getUserOrders = async (req, res) => {
   try {
     const userId = req.params.userId;
     
-    // Find all orders where user field equals the provided userId
     const orders = await Order.find({ user: userId })
-      .sort({ createdAt: -1 }) // Sort by date, newest first
-      .populate('items.product', 'name price'); // Populate product details if needed
+      .sort({ createdAt: -1 }) 
+      .populate('items.product', 'name price');
     
     res.status(200).json(orders);
   } catch (error) {

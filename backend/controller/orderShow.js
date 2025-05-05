@@ -3,7 +3,7 @@ import { Orders } from "../models/orderDine.js";
 import { OrderHistory } from "../models/orderHistory.js";
 
 export const send_Orders = async (req, res, next) => {
-  console.log("Request Body:", req.body); // Log the request body for debugging
+  console.log("Request Body:", req.body); 
 
   const { customerName, phoneNumber, address, items, totalPrice, paymentMethod } = req.body;
 
@@ -15,10 +15,8 @@ export const send_Orders = async (req, res, next) => {
   }
 
   try {
-    // Create the order
     const order = await Orders.create({ customerName, phoneNumber, address, items, totalPrice, paymentMethod });
     
-    // Also add to order history
     await OrderHistory.create({
       customerName,
       phoneNumber,
@@ -27,7 +25,7 @@ export const send_Orders = async (req, res, next) => {
       totalPrice,
       paymentMethod,
       status: "Processing",
-      estimatedDelivery: new Date(Date.now() + 45 * 60000) // Estimate 45 minutes from now
+      estimatedDelivery: new Date(Date.now() + 45 * 60000) 
     });
     
     res.status(201).json({

@@ -40,7 +40,6 @@ export const createOrderHistory = async (req, res, next) => {
   }
 };
 
-// Get all orders for a specific phone number
 export const getUserOrderHistory = async (req, res) => {
   try {
     const { phoneNumber } = req.params;
@@ -125,7 +124,6 @@ export const updateOrderStatus = async (req, res, next) => {
       return next(new ErrorHandler("Order not found", 404));
     }
 
-    // If updating to Delivered, set the deliveredAt time
     if (status === "Delivered" && order.status !== "Delivered") {
       order.deliveredAt = Date.now();
     }
@@ -144,7 +142,7 @@ export const updateOrderStatus = async (req, res, next) => {
   }
 };
 
-// Cancel an order
+// Cancel order
 export const cancelOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -217,6 +215,7 @@ export const getOrderStatistics = async (req, res, next) => {
       status: { $in: ["Processing", "Confirmed", "Preparing", "Out for Delivery"] } 
     });
     const cancelledOrders = await OrderHistory.countDocuments({ status: "Cancelled" });
+    
     
     // Calculate total revenue from delivered orders
     const revenueData = await OrderHistory.aggregate([
