@@ -42,35 +42,14 @@ export const createOrderHistory = async (req, res, next) => {
 
 export const getUserOrderHistory = async (req, res) => {
   try {
-    const { phoneNumber } = req.params;
-    console.log("Fetching orders for phone number:", phoneNumber);
-
-    if (!phoneNumber) {
-      return res.status(400).json({
-        success: false,
-        message: "Phone number is required.",
-      });
-    }
-
-    const orders = await OrderHistory.find({ phoneNumber }).sort({ createdAt: -1 });
-
+    const phoneNumber = req.params.phoneNumber;
+    const orders = await OrderHistory.find({ phoneNumber }); // Make sure this matches your schema!
     if (!orders || orders.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No orders found for this phone number.",
-      });
+      return res.status(404).json({ success: false, message: "No orders found." });
     }
-
-    res.status(200).json({
-      success: true,
-      orders,
-    });
+    res.status(200).json({ success: true, orders });
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch orders. Please try again later.",
-    });
+    res.status(500).json({ success: false, message: "Failed to fetch orders", error: error.message });
   }
 };
 

@@ -3,11 +3,25 @@ import { Orders } from "../models/orderDine.js";
 import { OrderHistory } from "../models/orderHistory.js";
 
 export const send_Orders = async (req, res, next) => {
-  console.log("Request Body:", req.body); 
+  console.log("Request Body:", req.body);
 
-  const { customerName, phoneNumber, address, items, totalPrice, paymentMethod } = req.body;
+  const {
+    customerName,
+    phoneNumber,
+    address,
+    items,
+    totalPrice,
+    paymentMethod,
+  } = req.body;
 
-  if (!customerName || !phoneNumber || !address || !items || !totalPrice || !paymentMethod) {
+  if (
+    !customerName ||
+    !phoneNumber ||
+    !address ||
+    !items ||
+    !totalPrice ||
+    !paymentMethod
+  ) {
     return res.status(400).json({
       success: false,
       message: "Please fill in all required order details!",
@@ -15,8 +29,15 @@ export const send_Orders = async (req, res, next) => {
   }
 
   try {
-    const order = await Orders.create({ customerName, phoneNumber, address, items, totalPrice, paymentMethod });
-    
+    const order = await Orders.create({
+      customerName,
+      phoneNumber,
+      address,
+      items,
+      totalPrice,
+      paymentMethod,
+    });
+
     await OrderHistory.create({
       customerName,
       phoneNumber,
@@ -25,9 +46,9 @@ export const send_Orders = async (req, res, next) => {
       totalPrice,
       paymentMethod,
       status: "Processing",
-      estimatedDelivery: new Date(Date.now() + 45 * 60000) 
+      estimatedDelivery: new Date(Date.now() + 45 * 60000),
     });
-    
+
     res.status(201).json({
       success: true,
       message: "Order placed successfully!",
@@ -41,4 +62,3 @@ export const send_Orders = async (req, res, next) => {
     });
   }
 };
-

@@ -3,26 +3,31 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { errorMiddleware } from "./middlewares/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
-import orderRouter from "./routes/orderRoute.js"; 
+import orderRouter from "./routes/orderRoute.js";
 import historyRouter from "./routes/historyRoutes.js";
 import { dbConnection } from "./database/dbConnection.js";
 
 const app = express();
 dotenv.config({ path: "./config.env" });
 
-app.use(cors({
-  origin: ['https://restaurant-reservation-tau.vercel.app', 'http://localhost:5173'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: [
+      "https://restaurant-reservation-tau.vercel.app",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/reservation", reservationRouter);
-app.use("/api/v1/Orders", orderRouter); 
-app.use("/api/v1/orderHistory", historyRouter); 
+app.use("/api/v1/Orders", orderRouter);
+app.use("/api/v1/orderHistory", historyRouter);
 app.get("/", (req, res, next) => {
   return res.status(200).json({
     success: true,
