@@ -10,12 +10,15 @@ import { dbConnection } from "./database/dbConnection.js";
 const app = express();
 dotenv.config({ path: "./config.env" });
 
+// Use allowed origins from .env
+const allowedOrigins = [
+  process.env.FRONTEND_URL_LOCAL,
+  process.env.FRONTEND_URL_PROD,
+];
+
 app.use(
   cors({
-    origin: [
-      "https://restaurant-reservation-tau.vercel.app",
-      "http://localhost:5173",
-    ],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
