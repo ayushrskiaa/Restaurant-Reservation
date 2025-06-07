@@ -18,11 +18,11 @@ const HeroSection = () => {
             </div>
             <div className="textAndLogo">
               <div className="textWithSvg">
-                <h1 className="title">Fresh.</h1>
+                <h1 className="title fresh">Fresh.</h1>
                 <h1 className="title dishes_title">Dishes</h1>
                 <img src="./threelines.svg" alt="threelines" />
               </div>
-              <img className="logo" src="logo.svg" alt="logo" />
+              {/* <img className="logo" src="logo.svg" alt="logo" /> */}
             </div>
           </div>
         </div>

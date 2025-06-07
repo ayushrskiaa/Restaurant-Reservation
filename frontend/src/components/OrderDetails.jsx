@@ -20,26 +20,29 @@ const OrderDetails = ({ toggleOrderDetails }) => {
     try {
       setLoading(true); 
       setError(null); 
-  
-      const response = await axios.get(`${BASE_URL}/api/history/user/${phone}`, {
+
+      const response = await axios.get(`${BASE_URL}/api/v1/orderHistory/user/${phone}`, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true, 
       });
 
-      // Handle the response
       if (response.data.success) {
-        setOrders(response.data.orders); // Set the orders
-        setShowPhoneInput(false); // Hide the phone input
+        setOrders(response.data.orders);
+        setShowPhoneInput(false);
       } else {
-        setError("No orders found for this phone number."); // Handle no orders case
+        setError("No orders found for this phone number.");
       }
     } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setError("No orders found for this phone number.");
+      } else {
+        setError("Failed to load orders. Please try again later.");
+      }
       console.error("Error fetching orders:", err);
-      setError("Failed to load orders. Please try again later."); // Handle errors
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 

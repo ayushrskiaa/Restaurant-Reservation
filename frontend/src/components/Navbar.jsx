@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <>
       <nav>
-        <div className="logo">RSKIAA CAFE</div>
+        <div className="logo">RSKIAA'S CAFE</div>
 
         <button
           className="menuBtn"

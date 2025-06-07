@@ -83,13 +83,13 @@
         {
           "id": 1,
           "image": "./team_member_1.png",
-          "name": "JOHNATHAN TYLER",
+          "name": "BEN STOKES",
           "designation": "Founder & Head Chef"
         },
         {
           "id": 2,
           "image": "./team_member_2.png",
-          "name": "WADE WARREN",
+          "name": "ALLEN SOLLY",
           "designation": "Sous Chef"
         },
         {
