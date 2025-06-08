@@ -8,6 +8,8 @@ const OrderDetails = ({ toggleOrderDetails }) => {
   const [error, setError] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPhoneInput, setShowPhoneInput] = useState(true);
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [cancelOrderId, setCancelOrderId] = useState(null);
 
   
   // Use environment variables for the base URL
@@ -29,7 +31,11 @@ const OrderDetails = ({ toggleOrderDetails }) => {
       });
 
       if (response.data.success) {
-        setOrders(response.data.orders);
+        // Sort orders by createdAt descending (latest first)
+        const sortedOrders = [...response.data.orders].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setOrders(sortedOrders);
         setShowPhoneInput(false);
       } else {
         setError("No orders found for this phone number.");
@@ -54,6 +60,79 @@ const OrderDetails = ({ toggleOrderDetails }) => {
       setError("Please enter a valid 10-digit phone number.");
     }
   };
+
+  const handleCancelClick = (orderId) => {
+    setCancelOrderId(orderId);
+    setShowCancelPopup(true);
+  };
+
+  const confirmCancelOrder = async () => {
+    try {
+      await axios.put(
+        `${BASE_URL}/api/v1/orderHistory/cancel/${cancelOrderId}`,
+        {},
+        { withCredentials: true }
+      );
+      setShowCancelPopup(false);
+      setCancelOrderId(null);
+      fetchOrdersByPhone(phoneNumber);
+    } catch (err) {
+      alert("Failed to cancel order.");
+      setShowCancelPopup(false);
+      setCancelOrderId(null);
+    }
+  };
+
+  const reorderOrder = async (orderId) => {
+    try {
+      await axios.post(
+        `${BASE_URL}/api/v1/orderHistory/reorder/${orderId}`,
+        {},
+        { withCredentials: true }
+      );
+      // Refresh orders after reorder
+      fetchOrdersByPhone(phoneNumber);
+    } catch (err) {
+      alert("Failed to reorder.");
+    }
+  };
+
+  const cancelPopup = (
+    <div style={{
+      position: "fixed",
+      top: 0, left: 0, width: "100vw", height: "100vh",
+      background: "rgba(0,0,0,0.4)", zIndex: 2000,
+      display: "flex", alignItems: "center", justifyContent: "center"
+    }}>
+      <div style={{
+        background: "#fff", padding: 32, borderRadius: 8, minWidth: 300,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.15)", textAlign: "center"
+      }}>
+        <h3>Cancel Order</h3>
+        <p>Are you sure you want to cancel this order?</p>
+        <div style={{ marginTop: 20, display: "flex", gap: 16, justifyContent: "center" }}>
+          <button
+            onClick={confirmCancelOrder}
+            style={{
+              padding: "8px 20px", background: "#e53935", color: "#fff",
+              border: "none", borderRadius: "4px", cursor: "pointer"
+            }}
+          >
+            Yes, Cancel
+          </button>
+          <button
+            onClick={() => { setShowCancelPopup(false); setCancelOrderId(null); }}
+            style={{
+              padding: "8px 20px", background: "#eee", color: "#333",
+              border: "none", borderRadius: "4px", cursor: "pointer"
+            }}
+          >
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -204,7 +283,7 @@ const OrderDetails = ({ toggleOrderDetails }) => {
                 }}
               >
                 <h2>Order #{order._id}</h2>
-                <p>Status: {order.status}</p>
+                <p>Status: <b>{order.status}</b></p>
                 <p>Total: ${order.totalPrice.toFixed(2)}</p>
                 <p>Payment Method: {order.paymentMethod}</p>
                 <p>Delivery Address: {order.address}</p>
@@ -216,10 +295,45 @@ const OrderDetails = ({ toggleOrderDetails }) => {
                     </li>
                   ))}
                 </ul>
+                <div style={{ marginTop: "10px" }}>
+                  {order.status !== "Cancelled" && order.status !== "Delivered" && (
+                    <button
+                      onClick={() => handleCancelClick(order._id)}
+                      style={{
+                        marginRight: "10px",
+                        padding: "8px 16px",
+                        backgroundColor: "#e53935",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                  <button
+                    onClick={() => reorderOrder(order._id)}
+                    style={{
+                      padding: "8px 16px",
+                      backgroundColor: "#43a047",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Reorder
+                  </button>
+                </div>
               </div>
             ))}
+            <button onClick={() => fetchOrdersByPhone(phoneNumber)}>
+              Refresh Orders
+            </button>
           </div>
         )}
+        {showCancelPopup && cancelPopup}
       </div>
     </div>
   );

@@ -1,45 +1,25 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
-import Home from './Pages/Home/Home';
+import Home from "./Pages/Home/Home";
 import NotFound from './Pages/NotFound/NotFound';
 import CheckoutPage from "./components/checkOut";
 import Success from './Pages/Success/Success';
+import RestaurantDashboard from "./components/ClientSideComponents/RestaurantDashboard";
 import './App.css';
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: <Home />,
-    },
-    {
-      path: '/checkOut',
-      element: <CheckoutPage />,
-    },
-    {
-      path: '/success',
-      element: <Success />,
-    },
-    {
-      path: '*',
-      element: <NotFound />,
-    },
-  ],
-  {
-    future: {
-      v7_startTransition: true, // Enables React's startTransition API
-      v7_relativeSplatPath: true, // Enables relative splat path resolution
-    },
-  }
-);
-
-const App = () => {
+function App() {
   return (
-    <>
-      <RouterProvider router={router} />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/checkOut" element={<CheckoutPage />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/restaurant-dashboard" element={<RestaurantDashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <Toaster />
-    </>
+    </Router>
   );
-};
+}
 
 export default App;

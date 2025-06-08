@@ -419,6 +419,28 @@ nav svg {
 .sideMenu .addToCartBtn:hover {
   background-color: #e5533d;
 }
+
+
+
+@media (min-width: 700px) {
+  .orderMenuDesktop { display: flex !important; }
+  .orderMenuMobile { display: none !important; }
+}
+@media (max-width: 699px) {
+  .orderMenuDesktop { display: none !important; }
+  .orderMenuMobile { display: block !important; }
+}
+
+@media (min-width: 700px) {
+  .categorySidebar {
+    display: flex !important;
+  }
+}
+@media (max-width: 699px) {
+  .categorySidebar {
+    display: none !important;
+  }
+}
 /**********************************************************************************************************************/
 
 /******************* ABOUT US COMPONENT STYLING **************/

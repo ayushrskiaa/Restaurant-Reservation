@@ -62,6 +62,8 @@ const Navbar = () => {
             <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />
             ORDERS
           </button>
+
+          
         </div>
         <div className="hamburger" onClick={() => setShow(!show)}>
           <GiHamburgerMenu />

@@ -48,15 +48,8 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
+    enum: ["Cash on Delivery", "Card", "UPI", "COD"],
     required: true,
-    enum: [
-      "Credit Card",
-      "Debit Card",
-      "Net Banking",
-      "UPI",
-      "Cash on Delivery",
-    ],
-    default: "Cash on Delivery",
   },
   createdAt: {
     type: Date,
@@ -65,3 +58,4 @@ const orderSchema = new mongoose.Schema({
 });
 
 export const Orders = mongoose.model("Orders", orderSchema);
+

@@ -15,6 +15,7 @@ const orderHistorySchema = new mongoose.Schema({
   paymentMethod: { type: String, required: true },
   status: { type: String, default: "Processing" },
   createdAt: { type: Date, default: Date.now },
+  paymentDone: { type: Boolean, default: false },
 });
 
 export const OrderHistory = mongoose.model("OrderHistory", orderHistorySchema);

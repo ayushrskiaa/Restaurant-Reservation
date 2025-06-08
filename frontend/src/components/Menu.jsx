@@ -15,7 +15,7 @@ const Menu = () => {
                         <div className="card" key={element.id}>
                                 <img src={element.image} alt={element.title} />
                                 <h3>{element.title}</h3>
-                                <button>{element.category}</button>
+                                {/* <button>{element.category}</button> */}
                         </div>
                     ))
                 }   

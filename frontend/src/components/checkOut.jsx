@@ -53,7 +53,7 @@ const CheckoutPage = () => {
 
     // Prepare items for the backend
     const items = Object.values(cart).map((item) => ({
-      id: item.id,
+      id: item.id || item._id, // <-- Fix: always send id
       title: item.title,
       price: item.price,
       quantity: item.quantity,
@@ -201,25 +201,42 @@ const CheckoutPage = () => {
                     Select a payment method
                   </option>
                   <option value="UPI">UPI</option>
+                  <option value="Card" disabled>Card</option>         
                   <option value="Cash on Delivery">Cash on Delivery</option>
                 </select>
               </label>
             </div>
-            <button
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-                marginTop: "20px",
-              }}
-              type="submit"
-            >
-              Place Order
-            </button>
+            <div style={{ display: "flex", gap: "16px", marginTop: "20px" }}>
+              <button
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#4CAF50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                }}
+                type="submit"
+              >
+                Place Order
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#e53935",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                }}
+                onClick={() => navigate(-1)}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       </div>
