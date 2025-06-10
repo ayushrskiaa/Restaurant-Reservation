@@ -162,20 +162,20 @@ const ProductManager = () => {
       {msg && <div style={{ color: "#6366f1", textAlign: "center", marginBottom: 16 }}>{msg}</div>}
       {tab === "view" && (
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+          <table className="ProductTable__table" style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
             <thead>
               <tr style={{ background: "#f3f4f6" }}>
                 <th style={{ padding: 12, width: 100, textAlign: "center" }}>Image</th>
                 <th style={{ padding: 12, width: 350, textAlign: "left" }}>Name</th>
                 <th style={{ padding: 12, width: 120, textAlign: "right" }}>Price</th>
-                <th style={{ padding: "12px 32px 12px 32px", width: 180, textAlign: "left" }}>Offer</th> {/* Add horizontal padding */}
+                <th style={{ padding: "12px 32px 12px 32px", width: 180, textAlign: "left" }}>Offer</th>
                 <th style={{ padding: 12, width: 180, textAlign: "center" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map(prod => (
                 <tr key={prod._id}>
-                  <td style={{ padding: 12, textAlign: "center" }}>
+                  <td data-label="Image" style={{ padding: 12, textAlign: "center" }}>
                     {prod.image ? (
                       <img
                         src={prod.image}
@@ -188,7 +188,7 @@ const ProductManager = () => {
                   </td>
                   {editId === prod._id ? (
                     <>
-                      <td style={{ padding: 12 }}>
+                      <td data-label="Name" style={{ padding: 12 }}>
                         <input
                           type="text"
                           value={editData.title}
@@ -196,7 +196,7 @@ const ProductManager = () => {
                           style={{ padding: 4, borderRadius: 4, border: "1px solid #ccc", minWidth: 100, width: "90%" }}
                         />
                       </td>
-                      <td style={{ padding: 12, textAlign: "right" }}>
+                      <td data-label="Price" style={{ padding: 12, textAlign: "right" }}>
                         <input
                           type="number"
                           value={editData.price}
@@ -205,7 +205,7 @@ const ProductManager = () => {
                           style={{ width: 80, padding: 4, borderRadius: 4, border: "1px solid #ccc", textAlign: "right" }}
                         />
                       </td>
-                      <td style={{ padding: "12px 32px 12px 32px" }}>
+                      <td data-label="Offer" style={{ padding: "12px 32px 12px 32px" }}>
                         <input
                           type="text"
                           value={editData.offer || ""}
@@ -213,7 +213,7 @@ const ProductManager = () => {
                           style={{ width: "90%", padding: 4, borderRadius: 4, border: "1px solid #ccc" }}
                         />
                       </td>
-                      <td style={{ padding: 12, display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
+                      <td data-label="Actions" style={{ padding: 12, display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
                         <input
                           type="file"
                           accept="image/*"
@@ -251,10 +251,10 @@ const ProductManager = () => {
                     </>
                   ) : (
                     <>
-                      <td style={{ padding: 12 }}>{prod.title}</td>
-                      <td style={{ padding: 12, textAlign: "right" }}>{prod.price}</td>
-                      <td style={{ padding: "12px 32px 12px 32px" }}>{prod.offer || ""}</td>
-                      <td style={{ padding: 12, textAlign: "center" }}>
+                      <td data-label="Name" style={{ padding: 12 }}>{prod.title}</td>
+                      <td data-label="Price" style={{ padding: 12, textAlign: "right" }}>{prod.price}</td>
+                      <td data-label="Offer" style={{ padding: "12px 32px 12px 32px" }}>{prod.offer || ""}</td>
+                      <td data-label="Actions" style={{ padding: 12, textAlign: "center" }}>
                         <button
                           onClick={() => handleEditStart(prod)}
                           style={{
@@ -294,6 +294,58 @@ const ProductManager = () => {
               )}
             </tbody>
           </table>
+          {/* Responsive styles for Product Table */}
+          <style>
+            {`
+            @media (max-width: 900px) {
+              .ProductTable__table, .ProductTable__table thead, .ProductTable__table tbody, .ProductTable__table th, .ProductTable__table td, .ProductTable__table tr {
+                display: block !important;
+                width: 100% !important;
+              }
+              .ProductTable__table thead {
+                display: none !important;
+              }
+              .ProductTable__table tr {
+                margin-bottom: 18px !important;
+                background: #f9f9fb !important;
+                border-radius: 8px !important;
+                box-shadow: 0 2px 8px #6366f122 !important;
+                padding: 8px !important;
+              }
+              .ProductTable__table td {
+                text-align: left !important;
+                padding: 8px 4px !important;
+                border: none !important;
+                border-bottom: 1px solid #eee !important;
+                font-size: 1rem !important;
+              }
+              .ProductTable__table td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                display: block;
+                margin-bottom: 2px;
+                color: #6366f1;
+              }
+              .ProductTable__table img {
+                width: 40vw !important;
+                max-width: 120px !important;
+                height: auto !important;
+              }
+            }
+            @media (max-width: 600px) {
+              .ProductTable__table td, .ProductTable__table th {
+                font-size: 0.98rem !important;
+              }
+              .ProductTable__table tr {
+                margin-bottom: 10px !important;
+              }
+              .ProductTable__table img {
+                width: 80vw !important;
+                max-width: 90px !important;
+              }
+            }
+            `}
+          </style>
         </div>
       )}
       {tab === "add" && (
@@ -405,8 +457,8 @@ const RestaurantDashboard = () => {
       ? import.meta.env.VITE_BASE_URL
       : import.meta.env.VITE_PRODUCTION_URL;
 
-  // Fetch all orders on mount
-  const fetchOrders = async () => {
+  // Fetch all orders on mount or refresh
+  const fetchOrders = async (keepFilter = false) => {
     setLoading(true);
     setError("");
     try {
@@ -414,7 +466,13 @@ const RestaurantDashboard = () => {
         withCredentials: true,
       });
       setOrders(res.data.orders || []);
-      setFilteredOrders(res.data.orders || []);
+      // Apply current filter after fetching if keepFilter is true
+      if (keepFilter) {
+        applyCurrentFilter(res.data.orders || []);
+      } else {
+        setFilteredOrders(res.data.orders || []);
+        setActiveFilter("all");
+      }
     } catch (err) {
       setError("Failed to fetch orders.");
     } finally {
@@ -422,8 +480,38 @@ const RestaurantDashboard = () => {
     }
   };
 
+  // Helper to apply current filter
+  const applyCurrentFilter = (ordersList) => {
+    let filtered = ordersList;
+    const now = new Date();
+    if (activeFilter === "today") {
+      filtered = ordersList.filter((order) => {
+        const d = new Date(order.createdAt);
+        return (
+          d.getDate() === now.getDate() &&
+          d.getMonth() === now.getMonth() &&
+          d.getFullYear() === now.getFullYear()
+        );
+      });
+    } else if (activeFilter === "week") {
+      const weekAgo = new Date();
+      weekAgo.setDate(now.getDate() - 7);
+      filtered = ordersList.filter(
+        (order) => new Date(order.createdAt) >= weekAgo
+      );
+    } else if (activeFilter === "month") {
+      const monthAgo = new Date();
+      monthAgo.setMonth(now.getMonth() - 1);
+      filtered = ordersList.filter(
+        (order) => new Date(order.createdAt) >= monthAgo
+      );
+    }
+    setFilteredOrders(filtered);
+  };
+
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(true); // On mount, keep current filter if any
+    // eslint-disable-next-line
   }, []);
 
   // Quick date filters
@@ -583,7 +671,28 @@ const RestaurantDashboard = () => {
         {/* Orders View */}
         {section === "orders" && (
           <div style={{ width: "100%" }}>
-            <h2 style={titleStyle}>Restaurant Orders Dashboard</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
+              <h2 style={titleStyle}>Restaurant Orders Dashboard</h2>
+              <button
+                onClick={() => fetchOrders(true)}
+                style={{
+                  padding: "8px 18px",
+                  background: "#6366f1",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px #6366f133",
+                  marginLeft: 8,
+                  marginTop: 8,
+                  minWidth: 110
+                }}
+                title="Refresh Orders"
+              >
+                &#x21bb; Refresh
+              </button>
+            </div>
             <OrderStats orders={filteredOrders} />
             <div style={{ display: "flex", gap: 16, marginBottom: 24, justifyContent: "center" }}>
               <button style={filterBtn(activeFilter === "today")} onClick={() => filterByDate("today")}>Today</button>
@@ -609,13 +718,20 @@ const RestaurantDashboard = () => {
               </div>
             )}
             {filteredOrders.length > 0 && (
-              <OrderTable
-                orders={filteredOrders}
-                statusOptions={statusOptions}
-                onStatusChange={handleStatusChange}
-                onPaymentStatusChange={handlePaymentStatusChange}
-                getDateString={getDateString}
-              />
+              <div style={{ overflowX: "auto" }}>
+                <OrderTable
+                  orders={filteredOrders}
+                  statusOptions={statusOptions}
+                  onStatusChange={handleStatusChange}
+                  onPaymentStatusChange={handlePaymentStatusChange}
+                  getDateString={getDateString}
+                  statusColorMap={{
+                    Delivered: "#22c55e",   // green
+                    Processing: "#2563eb",  // blue
+                    Cancelled: "#e53935"    // red
+                  }}
+                />
+              </div>
             )}
             {!loading && filteredOrders.length === 0 && (
               <p style={{ textAlign: "center", color: "#888", fontWeight: 500 }}>No orders found.</p>

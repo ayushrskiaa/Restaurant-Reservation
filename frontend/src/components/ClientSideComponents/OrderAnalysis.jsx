@@ -323,6 +323,7 @@ const OrderAnalysis = ({ orders }) => {
                 label={({ name }) => {
                   if (name === "Cancelled") return <span style={{ color: "#e53935" }}>{name}</span>;
                   if (name === "Delivered") return <span style={{ color: "#43a047" }}>{name}</span>;
+                  if (name === "Processing") return <span style={{ color: "#2563eb" }}>{name}</span>;
                   return name;
                 }}
               >
@@ -330,6 +331,7 @@ const OrderAnalysis = ({ orders }) => {
                   let fill = COLORS[idx % COLORS.length];
                   if (entry.name === "Cancelled") fill = "#e53935";
                   if (entry.name === "Delivered") fill = "#43a047";
+                  if (entry.name === "Processing") fill = "#2563eb";
                   return <Cell key={`cell-s-${idx}`} fill={fill} />;
                 })}
               </Pie>
@@ -337,6 +339,7 @@ const OrderAnalysis = ({ orders }) => {
                 formatter={(value) => {
                   if (value === "Cancelled") return <span style={{ color: "#e53935" }}>{value}</span>;
                   if (value === "Delivered") return <span style={{ color: "#43a047" }}>{value}</span>;
+                  if (value === "Processing") return <span style={{ color: "#2563eb" }}>{value}</span>;
                   return value;
                 }}
               />
