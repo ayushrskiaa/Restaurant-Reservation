@@ -6,7 +6,7 @@ import cors from "cors";
 // Place CORS middleware at the very top, before any routes
 app.use(cors({
   origin: [
-    "https://restaurant-reservation-git-main-ayushrskiaa09s-projects.vercel.app",
+    "https://restaurant-reservation-git-main-ayushrskiaa09s-projects.vercel.app/",
     "http://localhost:5173"
   ],
   credentials: true,
