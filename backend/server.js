@@ -14,6 +14,10 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
+app.get("/cors-check", (req, res) => {
+  res.json({ message: "CORS is working!" });
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`SERVER HAS STARTED AT PORT ${process.env.PORT}`);
 });
