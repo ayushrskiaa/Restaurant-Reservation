@@ -22,12 +22,12 @@ cloudinary.config({
 const allowedOrigins = [
   process.env.FRONTEND_URL_LOCAL,
   process.env.FRONTEND_URL_PROD,
+  process.env.FRONTEND_URL_VERCEL,
+  process.env.FRONTEND_URL_RENDER
 ];
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, etc.)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
