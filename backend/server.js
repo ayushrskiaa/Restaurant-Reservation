@@ -6,8 +6,10 @@ import cors from "cors";
 // CORS configuration
 app.use(cors({
   origin: [
-    "https://restaurant-reservation-git-main-ayushrskiaa09s-projects.vercel.app", 
-    "http://localhost:5173"
+    process.env.FRONTEND_URL_LOCAL,
+    process.env.FRONTEND_URL_PROD,
+    process.env.FRONTEND_URL_VERCEL,
+    process.env.FRONTEND_URL_RENDER
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
