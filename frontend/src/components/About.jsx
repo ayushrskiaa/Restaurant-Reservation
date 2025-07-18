@@ -13,14 +13,13 @@ const About = () => {
               <p>Serving the best food </p>
             </div>
             <p className="mid">
-              Welcome to our café, where every visit feels like home. We take
-              pride in serving freshly brewed coffee, handcrafted beverages, and
-              a menu filled with delicious dishes made from the finest
-              ingredients. Whether you are here for a quick bite, a relaxing
-              meal, or a place to work and unwind, our warm ambiance and
-              friendly staff are here to make your experience unforgettable.
-              Join us and savor the perfect blend of taste, comfort, and
-              community.
+              We welcome you to our cafe, where every visit feels like home. We
+              take pride in serving freshly brewed coffee, handcrafted
+              beverages, and a menu of delicious dishes made with the best
+              ingredients. Our friendly staff and warm ambiance ensure an
+              unforgettable experience, whether you are looking for a quick bite,
+              a relaxing meal, or a place to work and unwind. Join us for a
+              perfect blend of taste, comfort, and community.
             </p>
             <Link to={"/"}>
               Explore Menu{" "}

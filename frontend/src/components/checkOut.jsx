@@ -3,24 +3,113 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const loadRazorpayScript = (src) => {
+  return new Promise((resolve) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const CheckoutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const cart = location.state?.cart || {};
-  const total = location.state?.total || 0; // Use total passed from OrderMenu
-
-  console.log("Cart Data:", cart); // Debugging cart data
+  const total = location.state?.total || 0;
 
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
-  // Set the base URL based on the hostname
   const BASE_URL =
     window.location.hostname === "localhost"
       ? import.meta.env.VITE_BASE_URL
       : import.meta.env.VITE_PRODUCTION_URL;
+
+  // Razorpay payment handler
+  const handleRazorpayPayment = async () => {
+    const res = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!res) {
+      toast.error("Razorpay SDK failed to load.");
+      return;
+    }
+
+    // Create order on backend (you should have an endpoint for this)
+    let orderData;
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/api/v1/payment/create-order`,
+        { amount: total, receipt: `order_rcptid_${Date.now()}` }
+      );
+      orderData = data.order;
+    } catch (err) {
+      toast.error("Failed to initiate payment.");
+      return;
+    }
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "RSKIAA'S CAFE",
+      description: "Order Payment",
+      order_id: orderData.id,
+      handler: async function (response) {
+        // Place order in backend after payment success
+        try {
+          await axios.post(
+            `${BASE_URL}/api/v1/Orders`,
+            {
+              customerName,
+              phoneNumber,
+              address,
+              items: Object.values(cart).map((item) => ({
+                id: item.id || item._id,
+                title: item.title,
+                price: item.price,
+                quantity: item.quantity,
+              })),
+              totalPrice: total,
+              paymentMethod,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            },
+            {
+              headers: { "Content-Type": "application/json" },
+              withCredentials: true,
+            }
+          );
+          toast.success("Order placed successfully!");
+          navigate("/Success", {
+            state: { customerName, phoneNumber, address, paymentMethod },
+          });
+        } catch (error) {
+          toast.error("Order placement failed after payment.");
+        }
+      },
+      prefill: {
+        name: customerName,
+        contact: phoneNumber,
+      },
+      theme: { color: "#6366f1" },
+      method: {
+        upi: paymentMethod === "UPI",
+        card: paymentMethod === "Card",
+        netbanking: false,
+        wallet: false,
+      },
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -30,36 +119,30 @@ const CheckoutPage = () => {
       toast.error("Please fill in all required fields.");
       return;
     }
-
     if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
       toast.error("Please enter a valid 10-digit phone number.");
       return;
     }
-
     if (address.length < 10) {
       toast.error("Address must be at least 10 characters long.");
       return;
     }
-
     if (Object.keys(cart).length === 0) {
       toast.error("Your cart is empty. Please add items to your cart before placing an order.");
       return;
     }
-
     if (total === 0) {
       toast.error("Total price cannot be zero. Please check the item prices.");
       return;
     }
 
-    // Prepare items for the backend
-    const items = Object.values(cart).map((item) => ({
-      id: item.id || item._id, // <-- Fix: always send id
-      title: item.title,
-      price: item.price,
-      quantity: item.quantity,
-    }));
+    // If UPI or Card, open Razorpay
+    if (paymentMethod === "UPI" || paymentMethod === "Card") {
+      handleRazorpayPayment();
+      return;
+    }
 
-    // Send data to the backend
+    // For COD, place order directly
     try {
       const { data } = await axios.post(
         `${BASE_URL}/api/v1/Orders`,
@@ -67,14 +150,17 @@ const CheckoutPage = () => {
           customerName,
           phoneNumber,
           address,
-          items,
-          totalPrice: total, // Use the total passed from OrderMenu
+          items: Object.values(cart).map((item) => ({
+            id: item.id || item._id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+          })),
+          totalPrice: total,
           paymentMethod,
         },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
@@ -84,7 +170,6 @@ const CheckoutPage = () => {
         state: { customerName, phoneNumber, address, paymentMethod },
       });
 
-      // Reset form fields
       setCustomerName("");
       setPhoneNumber("");
       setAddress("");
@@ -201,7 +286,7 @@ const CheckoutPage = () => {
                     Select a payment method
                   </option>
                   <option value="UPI">UPI</option>
-                  <option value="Card" disabled>Card</option>         
+                  <option value="Card">Card</option>
                   <option value="Cash on Delivery">Cash on Delivery</option>
                 </select>
               </label>
