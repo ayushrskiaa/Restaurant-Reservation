@@ -3,10 +3,11 @@ import { data } from "../restApi.json";
 import { Link } from "react-scroll";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
-import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { MdOutlineDeliveryDining } from "react-icons/md";
+// import { MdOutlineRestaurantMenu } from "react-icons/md";
+import { MdOutlineDeliveryDining, MdOutlineAnalytics } from "react-icons/md"; // Add MdOutlineAnalytics import
 import OrderMenu from "./orderMenu";
 import OrderDetails from "./OrderDetails";
+import { Link as RouterLink } from "react-router-dom"; // Import Link and useNavigate from react-router-dom
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -30,14 +31,14 @@ const Navbar = () => {
       <nav>
         <div className="logo">RSKIAA'S CAFE</div>
 
-        <button
+        {/* <button
           className="menuBtn"
           style={{ border: "2px solid black" }}
           onClick={toggleSideMenu}
         >
           <MdOutlineRestaurantMenu style={{ fontSize: "20px", marginRight: "5px" }} />
           DINE IN
-        </button>
+        </button> */}
         <div className={show ? "navLinks showmenu" : "navLinks"}>
           <div className="links">
             {data[0].navbarLinks.map((element) => (
@@ -62,8 +63,10 @@ const Navbar = () => {
             <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />
             ORDERS
           </button>
-
-          
+          <RouterLink to="/restaurant-dashboard" className="menuBtn" style={{ textDecoration: "none" }}>
+            <MdOutlineAnalytics style={{ fontSize: "20px", marginRight: "5px" }} />
+            VISIT ANALYTICS DASHBOARD
+          </RouterLink>
         </div>
         <div className="hamburger" onClick={() => setShow(!show)}>
           <GiHamburgerMenu />
@@ -72,7 +75,7 @@ const Navbar = () => {
 
       {/* Render the OrderMenu component */}
       {sideMenuOpen && <OrderMenu toggleSideMenu={toggleSideMenu} />}
-      
+
       {/* Render the OrderDetails component */}
       {orderDetailsOpen && <OrderDetails toggleOrderDetails={toggleOrderDetails} />}
     </>
