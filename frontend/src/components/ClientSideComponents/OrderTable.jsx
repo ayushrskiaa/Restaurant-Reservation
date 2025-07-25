@@ -122,8 +122,15 @@ const OrderTable = ({
           Export Table as CSV
         </button>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table className="OrderTable__table" style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div style={{
+  overflowX: "auto",
+  background: "#fff",
+  borderRadius: 12,
+  boxShadow: "0 2px 12px #6366f122",
+  padding: "12px",
+  marginBottom: "24px"
+}}>
+        <table className="OrderTable__table" style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
           <thead>
             <tr style={{ background: "#f5f5f5" }}>
               <th style={{ padding: 8, border: "1px solid #ddd" }}>S. No.</th>

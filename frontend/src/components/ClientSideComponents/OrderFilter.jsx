@@ -11,8 +11,28 @@ const OrderFilter = ({ onFilter }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 20, display: "flex", gap: 16 }}>
-      <select value={status} onChange={e => setStatus(e.target.value)}>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        marginBottom: 20,
+        display: "flex",
+        gap: 12,
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <select
+        value={status}
+        onChange={e => setStatus(e.target.value)}
+        style={{
+          padding: "8px 12px",
+          borderRadius: 6,
+          border: "1px solid #ccc",
+          background: "#f3f4f6",
+          fontSize: "1rem"
+        }}
+      >
         <option value="">All Statuses</option>
         <option value="Processing">Processing</option>
         <option value="Preparing">Preparing</option>
@@ -25,8 +45,28 @@ const OrderFilter = ({ onFilter }) => {
         placeholder="Filter by phone"
         value={phone}
         onChange={e => setPhone(e.target.value)}
+        style={{
+          padding: "8px 12px",
+          borderRadius: 6,
+          border: "1px solid #ccc",
+          fontSize: "1rem"
+        }}
       />
-      <button type="submit">Filter</button>
+      <button
+        type="submit"
+        style={{
+          padding: "8px 18px",
+          background: "#6366f1",
+          color: "#fff",
+          border: "none",
+          borderRadius: "6px",
+          fontWeight: 600,
+          cursor: "pointer",
+          boxShadow: "0 2px 8px #6366f133"
+        }}
+      >
+        Filter
+      </button>
     </form>
   );
 };
