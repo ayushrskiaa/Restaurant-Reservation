@@ -8,6 +8,7 @@ import orderRouter from "./routes/orderRoute.js";
 import historyRouter from "./routes/historyRoutes.js";
 import productRouter from "./routes/productRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import chatbotRouter from "./routes/chatbotRoutes.js";
 import { dbConnection } from "./database/dbConnection.js";
 
 const app = express();
@@ -50,6 +51,7 @@ app.use("/api/v1/Orders", orderRouter);
 app.use("/api/v1/orderHistory", historyRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/chatbot", chatbotRouter);
 app.use("/public", express.static("public")); // Serve images
 app.get("/", (req, res, next) => {
   return res.status(200).json({

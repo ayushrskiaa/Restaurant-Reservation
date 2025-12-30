@@ -5,6 +5,7 @@ import NotFound from './Pages/NotFound/NotFound';
 import CheckoutPage from "./components/checkOut";
 import Success from './Pages/Success/Success';
 import RestaurantDashboard from "./components/ClientSideComponents/RestaurantDashboard";
+import Chatbot from "./components/Chatbot";
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
+      <Chatbot />
     </Router>
   );
 }
