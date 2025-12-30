@@ -15,8 +15,10 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Use the correct backend URL based on environment
-  const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000';
+  const API_URL =
+    window.location.hostname === 'localhost'
+      ? (import.meta.env.VITE_BASE_URL || 'http://localhost:5000')
+      : (import.meta.env.VITE_PRODUCTION_URL || import.meta.env.VITE_BASE_URL);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
