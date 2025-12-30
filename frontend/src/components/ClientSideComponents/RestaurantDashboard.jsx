@@ -10,13 +10,12 @@ const ProductManager = () => {
   const [products, setProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [offer, setOffer] = useState("");
   const [image, setImage] = useState(""); // image file name or url
   const [imageFile, setImageFile] = useState(null); // file object for upload
   const [msg, setMsg] = useState("");
   const [tab, setTab] = useState("view"); // "view" or "add"
   const [editId, setEditId] = useState(null); // id of product being edited
-  const [editData, setEditData] = useState({ title: "", price: "", offer: "", image: "" });
+  const [editData, setEditData] = useState({ title: "", price: "", image: "" });
   const [editImageFile, setEditImageFile] = useState(null);
   const [category, setCategory] = useState("Main Course"); // default value
 
@@ -57,12 +56,11 @@ const ProductManager = () => {
       }
       await axios.post(
         `${BASE_URL}/api/v1/products`,
-        { title, price, offer, image: imgUrl, category },
+        { title, price, image: imgUrl, category },
         { withCredentials: true }
       );
       setTitle("");
       setPrice("");
-      setOffer("");
       setImage("");
       setImageFile(null);
       setMsg("Product added!");
@@ -79,7 +77,6 @@ const ProductManager = () => {
     setEditData({
       title: prod.title,
       price: prod.price,
-      offer: prod.offer || "",
       image: prod.image || ""
     });
     setEditImageFile(null);
@@ -106,7 +103,7 @@ const ProductManager = () => {
       );
       setMsg("Product updated!");
       setEditId(null);
-      setEditData({ title: "", price: "", offer: "", image: "" });
+      setEditData({ title: "", price: "", image: "" });
       setEditImageFile(null);
       fetchProducts();
     } catch {
@@ -168,7 +165,6 @@ const ProductManager = () => {
                 <th style={{ padding: 12, width: 100, textAlign: "center" }}>Image</th>
                 <th style={{ padding: 12, width: 350, textAlign: "left" }}>Name</th>
                 <th style={{ padding: 12, width: 120, textAlign: "right" }}>Price</th>
-                <th style={{ padding: "12px 32px 12px 32px", width: 180, textAlign: "left" }}>Offer</th>
                 <th style={{ padding: 12, width: 180, textAlign: "center" }}>Actions</th>
               </tr>
             </thead>
@@ -203,14 +199,6 @@ const ProductManager = () => {
                           min={1}
                           onChange={e => setEditData({ ...editData, price: e.target.value })}
                           style={{ width: 80, padding: 4, borderRadius: 4, border: "1px solid #ccc", textAlign: "right" }}
-                        />
-                      </td>
-                      <td data-label="Offer" style={{ padding: "12px 32px 12px 32px" }}>
-                        <input
-                          type="text"
-                          value={editData.offer || ""}
-                          onChange={e => setEditData({ ...editData, offer: e.target.value })}
-                          style={{ width: "90%", padding: 4, borderRadius: 4, border: "1px solid #ccc" }}
                         />
                       </td>
                       <td data-label="Actions" style={{ padding: 12, display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
@@ -253,7 +241,6 @@ const ProductManager = () => {
                     <>
                       <td data-label="Name" style={{ padding: 12 }}>{prod.title}</td>
                       <td data-label="Price" style={{ padding: 12, textAlign: "right" }}>{prod.price}</td>
-                      <td data-label="Offer" style={{ padding: "12px 32px 12px 32px" }}>{prod.offer || ""}</td>
                       <td data-label="Actions" style={{ padding: 12, textAlign: "center" }}>
                         <button
                           onClick={() => handleEditStart(prod)}
@@ -289,7 +276,7 @@ const ProductManager = () => {
               ))}
               {products.length === 0 && (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: "center", color: "#888", padding: 16 }}>No products found.</td>
+                  <td colSpan={4} style={{ textAlign: "center", color: "#888", padding: 16 }}>No products found.</td>
                 </tr>
               )}
             </tbody>
@@ -366,13 +353,6 @@ const ProductManager = () => {
             required
             min={1}
             style={{ padding: 8, borderRadius: 6, border: "1px solid #ccc", minWidth: 100 }}
-          />
-          <input
-            type="text"
-            placeholder="Offer (optional)"
-            value={offer}
-            onChange={e => setOffer(e.target.value)}
-            style={{ padding: 8, borderRadius: 6, border: "1px solid #ccc", minWidth: 120 }}
           />
           <input
             type="file"
@@ -659,20 +639,20 @@ const RestaurantDashboard = () => {
             style={toggleBtn(section === "analysis")}
             onClick={() => setSection("analysis")}
           >
-            Analysis
+            Insights
           </button>
           <button
             style={toggleBtn(section === "products")}
             onClick={() => setSection("products")}
           >
-            Products
+            Menu Items
           </button>
         </div>
         {/* Orders View */}
         {section === "orders" && (
           <div style={{ width: "100%" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
-              <h2 style={titleStyle}>Restaurant Orders Dashboard</h2>
+              <h2 style={titleStyle}>Restaurant Management Dashboard</h2>
               <button
                 onClick={() => fetchOrders(true)}
                 style={{
@@ -741,7 +721,7 @@ const RestaurantDashboard = () => {
         {/* Analysis View */}
         {section === "analysis" && (
           <div style={{ width: "100%", textAlign: "center" }}>
-            <h2 style={{ ...titleStyle, marginBottom: 32 }}>Orders Analysis</h2>
+            <h2 style={{ ...titleStyle, marginBottom: 32 }}>Orders Insights</h2>
             <OrderAnalysis orders={orders} />
           </div>
         )}
