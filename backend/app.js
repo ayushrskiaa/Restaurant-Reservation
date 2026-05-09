@@ -1,7 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { v2 as cloudinary } from "cloudinary"; // <-- ADD THIS LINE
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import morgan from "morgan";
+import { v2 as cloudinary } from "cloudinary";
 import { errorMiddleware } from "./middlewares/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
 import orderRouter from "./routes/orderRoute.js";
@@ -12,12 +15,31 @@ import chatbotRouter from "./routes/chatbotRoutes.js";
 import { dbConnection } from "./database/dbConnection.js";
 
 const app = express();
-dotenv.config({ path: "./config.env" }); // <-- Make sure this is before cloudinary.config
+dotenv.config({ path: "./config.env" });
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Security middleware
+app.use(helmet()); // Sets various HTTP headers for security
+app.use(morgan("combined")); // Request logging
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+app.use(limiter);
+
+// Stricter rate limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // 5 requests per 15 minutes
+  message: "Too many login attempts, please try again later.",
 });
 
 // Use allowed origins from .env
@@ -43,8 +65,8 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use("/api/v1/reservation", reservationRouter);
 app.use("/api/v1/Orders", orderRouter);
