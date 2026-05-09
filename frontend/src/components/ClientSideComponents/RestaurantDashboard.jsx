@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { RefreshCw } from "lucide-react";
 import OrderFilter from "./OrderFilter";
 import OrderTable from "./OrderTable";
 import OrderStats from "./OrderStats";
 import OrderAnalysis from "./OrderAnalysis";
+import styles from "./RestaurantDashboard.module.css";
 
-// --- Product Management Component ---
+// --- Product Manager ---
 const ProductManager = () => {
   const [products, setProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState(""); // image file name or url
-  const [imageFile, setImageFile] = useState(null); // file object for upload
+  const [imageFile, setImageFile] = useState(null);
   const [msg, setMsg] = useState("");
-  const [tab, setTab] = useState("view"); // "view" or "add"
-  const [editId, setEditId] = useState(null); // id of product being edited
+  const [tab, setTab] = useState("view");
+  const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({ title: "", price: "", image: "" });
   const [editImageFile, setEditImageFile] = useState(null);
-  const [category, setCategory] = useState("Main Course"); // default value
+  const [category, setCategory] = useState("Main Course");
 
-  const BASE_URL =
-    window.location.hostname === "localhost"
-      ? import.meta.env.VITE_BASE_URL
-      : import.meta.env.VITE_PRODUCTION_URL;
+  const BASE_URL = window.location.hostname === "localhost"
+    ? import.meta.env.VITE_BASE_URL
+    : import.meta.env.VITE_PRODUCTION_URL;
 
-  // Fetch products
   const fetchProducts = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/v1/products`, { withCredentials: true });
@@ -34,17 +33,13 @@ const ProductManager = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-    // eslint-disable-next-line
-  }, []);
+  useEffect(() => { fetchProducts(); }, []); // eslint-disable-line
 
-  // Add product
   const handleAdd = async (e) => {
     e.preventDefault();
     setMsg("");
     try {
-      let imgUrl = image;
+      let imgUrl = "";
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
@@ -52,17 +47,10 @@ const ProductManager = () => {
           headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         });
-        imgUrl = uploadRes.data.url; // Use Cloudinary URL
+        imgUrl = uploadRes.data.url;
       }
-      await axios.post(
-        `${BASE_URL}/api/v1/products`,
-        { title, price, image: imgUrl, category },
-        { withCredentials: true }
-      );
-      setTitle("");
-      setPrice("");
-      setImage("");
-      setImageFile(null);
+      await axios.post(`${BASE_URL}/api/v1/products`, { title, price, image: imgUrl, category }, { withCredentials: true });
+      setTitle(""); setPrice(""); setImageFile(null);
       setMsg("Product added!");
       fetchProducts();
       setTab("view");
@@ -71,18 +59,12 @@ const ProductManager = () => {
     }
   };
 
-  // Start editing a product
   const handleEditStart = (prod) => {
     setEditId(prod._id);
-    setEditData({
-      title: prod.title,
-      price: prod.price,
-      image: prod.image || ""
-    });
+    setEditData({ title: prod.title, price: prod.price, image: prod.image || "" });
     setEditImageFile(null);
   };
 
-  // Save edited product
   const handleEditSave = async (id) => {
     setMsg("");
     try {
@@ -94,13 +76,9 @@ const ProductManager = () => {
           headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         });
-        imgUrl = uploadRes.data.url; // Use Cloudinary URL
+        imgUrl = uploadRes.data.url;
       }
-      await axios.put(
-        `${BASE_URL}/api/v1/products/${id}`,
-        { ...editData, image: imgUrl },
-        { withCredentials: true }
-      );
+      await axios.put(`${BASE_URL}/api/v1/products/${id}`, { ...editData, image: imgUrl }, { withCredentials: true });
       setMsg("Product updated!");
       setEditId(null);
       setEditData({ title: "", price: "", image: "" });
@@ -111,7 +89,6 @@ const ProductManager = () => {
     }
   };
 
-  // Remove product
   const handleDelete = async (id) => {
     setMsg("");
     try {
@@ -123,152 +100,86 @@ const ProductManager = () => {
     }
   };
 
-  // Tab button style
-  const tabBtn = (active) => ({
-    padding: "10px 32px",
-    background: active ? "#6366f1" : "#f3f4f6",
-    color: active ? "#fff" : "#333",
-    border: "none",
-    borderRadius: "8px 8px 0 0",
-    fontWeight: 700,
-    fontSize: "1.1rem",
-    cursor: "pointer",
-    marginRight: 2,
-    boxShadow: active ? "0 2px 8px #6366f133" : "none",
-    borderBottom: active ? "4px solid #6366f1" : "4px solid transparent",
-    transition: "all 0.2s"
-  });
+  const isError = msg.toLowerCase().startsWith("failed");
 
   return (
-    <div
-      style={{
-        background: "#fff",
-        borderRadius: 12,
-        padding: 32,
-        boxShadow: "0 4px 24px #6366f122",
-        margin: "32px auto",
-        maxWidth: 1600, // Make Product Management as wide as the dashboard
-        width: "100%",
-      }}
-    >
-      <h2 style={{ textAlign: "center", marginBottom: 24, color: "#3b3b5c" }}>Product Management</h2>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-        <button style={tabBtn(tab === "view")} onClick={() => setTab("view")}>See & Edit Current Items</button>
-        <button style={tabBtn(tab === "add")} onClick={() => setTab("add")}>Add New Item</button>
+    <div className={styles.pmWrap}>
+      <div className={styles.pmTabBar}>
+        <button
+          className={`${styles.pmTab} ${tab === "view" ? styles.active : ""}`}
+          onClick={() => setTab("view")}
+        >
+          Current Items
+        </button>
+        <button
+          className={`${styles.pmTab} ${tab === "add" ? styles.active : ""}`}
+          onClick={() => setTab("add")}
+        >
+          Add New Item
+        </button>
       </div>
-      {msg && <div style={{ color: "#6366f1", textAlign: "center", marginBottom: 16 }}>{msg}</div>}
+
+      {msg && (
+        <div className={`${styles.pmMsg} ${isError ? styles.pmMsgError : ""}`}>{msg}</div>
+      )}
+
       {tab === "view" && (
-        <div style={{ overflowX: "auto" }}>
-          <table className="ProductTable__table" style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+        <div className={styles.tableWrap}>
+          <table className={styles.productTable}>
             <thead>
-              <tr style={{ background: "#f3f4f6" }}>
-                <th style={{ padding: 12, width: 100, textAlign: "center" }}>Image</th>
-                <th style={{ padding: 12, width: 350, textAlign: "left" }}>Name</th>
-                <th style={{ padding: 12, width: 120, textAlign: "right" }}>Price</th>
-                <th style={{ padding: 12, width: 180, textAlign: "center" }}>Actions</th>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map(prod => (
                 <tr key={prod._id}>
-                  <td data-label="Image" style={{ padding: 12, textAlign: "center" }}>
-                    {prod.image ? (
-                      <img
-                        src={prod.image}
-                        alt={prod.title}
-                        style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 6 }}
-                      />
-                    ) : (
-                      <span style={{ color: "#aaa" }}>No Image</span>
-                    )}
+                  <td data-label="Image">
+                    {prod.image
+                      ? <img src={prod.image} alt={prod.title} className={styles.productThumb} />
+                      : <span className={styles.productThumbEmpty}>No image</span>
+                    }
                   </td>
+
                   {editId === prod._id ? (
                     <>
-                      <td data-label="Name" style={{ padding: 12 }}>
+                      <td data-label="Name">
                         <input
+                          className={styles.editInput}
                           type="text"
                           value={editData.title}
                           onChange={e => setEditData({ ...editData, title: e.target.value })}
-                          style={{ padding: 4, borderRadius: 4, border: "1px solid #ccc", minWidth: 100, width: "90%" }}
                         />
                       </td>
-                      <td data-label="Price" style={{ padding: 12, textAlign: "right" }}>
+                      <td data-label="Price" className={styles.tdRight}>
                         <input
+                          className={`${styles.editInput} ${styles.editInputPrice}`}
                           type="number"
                           value={editData.price}
                           min={1}
                           onChange={e => setEditData({ ...editData, price: e.target.value })}
-                          style={{ width: 80, padding: 4, borderRadius: 4, border: "1px solid #ccc", textAlign: "right" }}
                         />
                       </td>
-                      <td data-label="Actions" style={{ padding: 12, display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={e => setEditImageFile(e.target.files[0])}
-                        />
-                        <div style={{ display: "flex", gap: 6 }}>
-                          <button
-                            onClick={() => handleEditSave(prod._id)}
-                            style={{
-                              background: "#43a047",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: 4,
-                              padding: "4px 12px",
-                              cursor: "pointer"
-                            }}
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setEditId(null)}
-                            style={{
-                              background: "#e53935",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: 4,
-                              padding: "4px 12px",
-                              cursor: "pointer"
-                            }}
-                          >
-                            Cancel
-                          </button>
+                      <td data-label="Actions">
+                        <div className={styles.editActionsCell}>
+                          <input type="file" accept="image/*" onChange={e => setEditImageFile(e.target.files[0])} />
+                          <div className={styles.editBtnRow}>
+                            <button className={styles.btnSave} onClick={() => handleEditSave(prod._id)}>Save</button>
+                            <button className={styles.btnCancel} onClick={() => setEditId(null)}>Cancel</button>
+                          </div>
                         </div>
                       </td>
                     </>
                   ) : (
                     <>
-                      <td data-label="Name" style={{ padding: 12 }}>{prod.title}</td>
-                      <td data-label="Price" style={{ padding: 12, textAlign: "right" }}>{prod.price}</td>
-                      <td data-label="Actions" style={{ padding: 12, textAlign: "center" }}>
-                        <button
-                          onClick={() => handleEditStart(prod)}
-                          style={{
-                            background: "#6366f1",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 4,
-                            padding: "4px 12px",
-                            cursor: "pointer",
-                            marginRight: 6
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(prod._id)}
-                          style={{
-                            background: "#e53935",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 4,
-                            padding: "4px 12px",
-                            cursor: "pointer"
-                          }}
-                        >
-                          Delete
-                        </button>
+                      <td data-label="Name">{prod.title}</td>
+                      <td data-label="Price" className={styles.tdRight}>₹{prod.price}</td>
+                      <td data-label="Actions" className={styles.tdCenter}>
+                        <button className={styles.btnEdit} onClick={() => handleEditStart(prod)}>Edit</button>
+                        <button className={styles.btnDelete} onClick={() => handleDelete(prod._id)}>Delete</button>
                       </td>
                     </>
                   )}
@@ -276,106 +187,46 @@ const ProductManager = () => {
               ))}
               {products.length === 0 && (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: "center", color: "#888", padding: 16 }}>No products found.</td>
+                  <td colSpan={4} className={styles.noProducts}>No products found.</td>
                 </tr>
               )}
             </tbody>
           </table>
-          {/* Responsive styles for Product Table */}
-          <style>
-            {`
-            @media (max-width: 900px) {
-              .ProductTable__table, .ProductTable__table thead, .ProductTable__table tbody, .ProductTable__table th, .ProductTable__table td, .ProductTable__table tr {
-                display: block !important;
-                width: 100% !important;
-              }
-              .ProductTable__table thead {
-                display: none !important;
-              }
-              .ProductTable__table tr {
-                margin-bottom: 18px !important;
-                background: #f9f9fb !important;
-                border-radius: 8px !important;
-                box-shadow: 0 2px 8px #6366f122 !important;
-                padding: 8px !important;
-              }
-              .ProductTable__table td {
-                text-align: left !important;
-                padding: 8px 4px !important;
-                border: none !important;
-                border-bottom: 1px solid #eee !important;
-                font-size: 1rem !important;
-              }
-              .ProductTable__table td:before {
-                content: attr(data-label);
-                font-weight: 700;
-                display: block;
-                margin-bottom: 2px;
-                color: #6366f1;
-              }
-              .ProductTable__table img {
-                width: 40vw !important;
-                max-width: 120px !important;
-                height: auto !important;
-              }
-            }
-            @media (max-width: 600px) {
-              .ProductTable__table td, .ProductTable__table th {
-                font-size: 0.98rem !important;
-              }
-              .ProductTable__table tr {
-                margin-bottom: 10px !important;
-              }
-              .ProductTable__table img {
-                width: 80vw !important;
-                max-width: 90px !important;
-              }
-            }
-            `}
-          </style>
         </div>
       )}
+
       {tab === "add" && (
-        <form onSubmit={handleAdd} style={{ display: "flex", gap: 16, marginBottom: 24, justifyContent: "center", flexWrap: "wrap" }}>
+        <form className={styles.addForm} onSubmit={handleAdd}>
           <input
+            className={styles.addInput}
             type="text"
-            placeholder="Product Name"
+            placeholder="Product name"
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
-            style={{ padding: 8, borderRadius: 6, border: "1px solid #ccc", minWidth: 160 }}
           />
           <input
+            className={styles.addInput}
             type="number"
             placeholder="Price"
             value={price}
             onChange={e => setPrice(e.target.value)}
             required
             min={1}
-            style={{ padding: 8, borderRadius: 6, border: "1px solid #ccc", minWidth: 100 }}
+            style={{ minWidth: 110 }}
           />
           <input
+            className={styles.addFileInput}
             type="file"
             accept="image/*"
-            onChange={e => {
-              setImageFile(e.target.files[0]);
-              setImage(e.target.files[0]?.name || "");
-            }}
-            style={{ padding: 8, borderRadius: 6, border: "1px solid #ccc", minWidth: 160 }}
+            onChange={e => setImageFile(e.target.files[0])}
             required
           />
           <select
+            className={styles.addSelect}
             value={category}
             onChange={e => setCategory(e.target.value)}
             required
-            style={{
-              padding: 8,
-              borderRadius: 6,
-              border: "1px solid #ccc",
-              minWidth: 140,
-              background: "#f3f4f6",
-              fontSize: "1rem"
-            }}
           >
             <option value="Main Course">Main Course</option>
             <option value="Starter">Starter</option>
@@ -385,21 +236,7 @@ const ProductManager = () => {
             <option value="Snacks">Snacks</option>
             <option value="Other">Other</option>
           </select>
-          <button
-            type="submit"
-            style={{
-              padding: "8px 18px",
-              background: "#6366f1",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: 600,
-              cursor: "pointer",
-              boxShadow: "0 2px 8px #6366f133"
-            }}
-          >
-            Add Product
-          </button>
+          <button type="submit" className={styles.btnAdd}>Add Product</button>
         </form>
       )}
     </div>
@@ -407,20 +244,11 @@ const ProductManager = () => {
 };
 // --- End ProductManager ---
 
-const statusOptions = [
-  "Processing",
-  "Preparing",
-  "Out for Delivery",
-  "Delivered",
-  "Cancelled"
-];
+const STATUS_OPTIONS = ["Processing", "Preparing", "Out for Delivery", "Delivered", "Cancelled"];
 
 const getDateString = (date) => {
   const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}${month}${year}`;
+  return `${String(d.getDate()).padStart(2, "0")}${String(d.getMonth() + 1).padStart(2, "0")}${d.getFullYear()}`;
 };
 
 const RestaurantDashboard = () => {
@@ -429,308 +257,183 @@ const RestaurantDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-  // const [view, setView] = useState("order"); // "order" or "analysis"
-  const [section, setSection] = useState("orders"); // orders | analysis | products
+  const [section, setSection] = useState("orders");
 
-  const BASE_URL =
-    window.location.hostname === "localhost"
-      ? import.meta.env.VITE_BASE_URL
-      : import.meta.env.VITE_PRODUCTION_URL;
+  const BASE_URL = window.location.hostname === "localhost"
+    ? import.meta.env.VITE_BASE_URL
+    : import.meta.env.VITE_PRODUCTION_URL;
 
-  // Fetch all orders on mount or refresh
+  const applyFilter = (ordersList, type) => {
+    const now = new Date();
+    if (type === "today") {
+      return ordersList.filter(o => {
+        const d = new Date(o.createdAt);
+        return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      });
+    }
+    if (type === "week") {
+      const ago = new Date(); ago.setDate(now.getDate() - 7);
+      return ordersList.filter(o => new Date(o.createdAt) >= ago);
+    }
+    if (type === "month") {
+      const ago = new Date(); ago.setMonth(now.getMonth() - 1);
+      return ordersList.filter(o => new Date(o.createdAt) >= ago);
+    }
+    return ordersList;
+  };
+
   const fetchOrders = async (keepFilter = false) => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/orderHistory/all`, {
-        withCredentials: true,
-      });
-      setOrders(res.data.orders || []);
-      // Apply current filter after fetching if keepFilter is true
+      const res = await axios.get(`${BASE_URL}/api/v1/orderHistory/all`, { withCredentials: true });
+      const list = res.data.orders || [];
+      setOrders(list);
       if (keepFilter) {
-        applyCurrentFilter(res.data.orders || []);
+        setFilteredOrders(applyFilter(list, activeFilter));
       } else {
-        setFilteredOrders(res.data.orders || []);
+        setFilteredOrders(list);
         setActiveFilter("all");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to fetch orders.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Helper to apply current filter
-  const applyCurrentFilter = (ordersList) => {
-    let filtered = ordersList;
-    const now = new Date();
-    if (activeFilter === "today") {
-      filtered = ordersList.filter((order) => {
-        const d = new Date(order.createdAt);
-        return (
-          d.getDate() === now.getDate() &&
-          d.getMonth() === now.getMonth() &&
-          d.getFullYear() === now.getFullYear()
-        );
-      });
-    } else if (activeFilter === "week") {
-      const weekAgo = new Date();
-      weekAgo.setDate(now.getDate() - 7);
-      filtered = ordersList.filter(
-        (order) => new Date(order.createdAt) >= weekAgo
-      );
-    } else if (activeFilter === "month") {
-      const monthAgo = new Date();
-      monthAgo.setMonth(now.getMonth() - 1);
-      filtered = ordersList.filter(
-        (order) => new Date(order.createdAt) >= monthAgo
-      );
-    }
-    setFilteredOrders(filtered);
-  };
+  useEffect(() => { fetchOrders(true); }, []); // eslint-disable-line
 
-  useEffect(() => {
-    fetchOrders(true); // On mount, keep current filter if any
-    // eslint-disable-next-line
-  }, []);
-
-  // Quick date filters
   const filterByDate = (type) => {
     setActiveFilter(type);
-    const now = new Date();
-    let filtered = orders;
-    if (type === "today") {
-      filtered = orders.filter((order) => {
-        const d = new Date(order.createdAt);
-        return (
-          d.getDate() === now.getDate() &&
-          d.getMonth() === now.getMonth() &&
-          d.getFullYear() === now.getFullYear()
-        );
-      });
-    } else if (type === "week") {
-      const weekAgo = new Date();
-      weekAgo.setDate(now.getDate() - 7);
-      filtered = orders.filter(
-        (order) => new Date(order.createdAt) >= weekAgo
-      );
-    } else if (type === "month") {
-      const monthAgo = new Date();
-      monthAgo.setMonth(now.getMonth() - 1);
-      filtered = orders.filter(
-        (order) => new Date(order.createdAt) >= monthAgo
-      );
-    }
-    setFilteredOrders(filtered);
+    setFilteredOrders(applyFilter(orders, type));
   };
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(
-        `${BASE_URL}/api/v1/orderHistory/status/${orderId}`,
-        { status: newStatus },
-        { withCredentials: true }
-      );
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
-      );
-      setFilteredOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
-      );
-    } catch (err) {
+      await axios.put(`${BASE_URL}/api/v1/orderHistory/status/${orderId}`, { status: newStatus }, { withCredentials: true });
+      const update = (list) => list.map(o => o._id === orderId ? { ...o, status: newStatus } : o);
+      setOrders(update);
+      setFilteredOrders(update);
+    } catch {
       alert("Failed to update status.");
     }
   };
 
   const handlePaymentStatusChange = async (orderId, paymentDone) => {
-    try {
-      await axios.put(
-        `${BASE_URL}/api/v1/orderHistory/status/${orderId}`,
-        { paymentDone },
-        { withCredentials: true }
-      );
-      setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, paymentDone } : order
-        )
-      );
-      setFilteredOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, paymentDone } : order
-        )
-      );
-    } catch (err) {
-      alert("Failed to update payment status.");
-    }
+    await axios.put(`${BASE_URL}/api/v1/orderHistory/status/${orderId}`, { paymentDone }, { withCredentials: true });
+    const update = (list) => list.map(o => o._id === orderId ? { ...o, paymentDone } : o);
+    setOrders(update);
+    setFilteredOrders(update);
   };
 
   const handleFilter = ({ status, phone }) => {
     let filtered = orders;
     if (status) filtered = filtered.filter(o => o.status === status);
-    if (phone) filtered = filtered.filter(o => o.phoneNumber?.includes(phone));
+    if (phone)  filtered = filtered.filter(o => o.phoneNumber?.includes(phone));
     setFilteredOrders(filtered);
     setActiveFilter("all");
   };
 
-  // --- Styling ---
-  const bgStyle = {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)",
-    padding: "40px 0"
-  };
-  const cardStyle = {
-    maxWidth: 1600, // Make all sections equally wide
-    margin: "0 auto",
-    background: "#fff",
-    borderRadius: "16px",
-    boxShadow: "0 4px 32px rgba(60,60,120,0.10)",
-    padding: 32
-  };
-  const titleStyle = {
-    textAlign: "center",
-    fontWeight: 700,
-    fontSize: "2.2rem",
-    marginBottom: 24,
-    color: "#3b3b5c"
-  };
-  const filterBtn = (active) => ({
-    padding: "10px 22px",
-    background: active ? "linear-gradient(90deg,#6366f1,#60a5fa)" : "#f3f4f6",
-    color: active ? "#fff" : "#333",
-    border: "none",
-    borderRadius: "6px",
-    fontWeight: 600,
-    fontSize: "1rem",
-    cursor: "pointer",
-    boxShadow: active ? "0 2px 8px #6366f133" : "none",
-    transition: "all 0.2s"
-  });
-  const toggleBtn = (active) => ({
-    padding: "10px 32px",
-    background: active ? "#6366f1" : "#f3f4f6",
-    color: active ? "#fff" : "#333",
-    border: "none",
-    borderRadius: "8px 8px 0 0",
-    fontWeight: 700,
-    fontSize: "1.1rem",
-    cursor: "pointer",
-    marginRight: 2,
-    boxShadow: active ? "0 2px 8px #6366f133" : "none",
-    borderBottom: active ? "4px solid #6366f1" : "4px solid transparent",
-    transition: "all 0.2s"
-  });
+  const DATE_FILTERS = [
+    { key: "today", label: "Today" },
+    { key: "week",  label: "Last 7 days" },
+    { key: "month", label: "Last 30 days" },
+    { key: "all",   label: "All time" },
+  ];
 
   return (
-    <div style={bgStyle}>
-      <div style={cardStyle}>
-        {/* Toggle Button */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-          <button
-            style={toggleBtn(section === "orders")}
-            onClick={() => setSection("orders")}
-          >
-            Orders
-          </button>
-          <button
-            style={toggleBtn(section === "analysis")}
-            onClick={() => setSection("analysis")}
-          >
-            Insights
-          </button>
-          <button
-            style={toggleBtn(section === "products")}
-            onClick={() => setSection("products")}
-          >
-            Menu Items
-          </button>
+    <div className={styles.page}>
+      <div className={styles.container}>
+
+        {/* Section tabs */}
+        <div className={styles.tabBar}>
+          {[
+            { key: "orders",   label: "Orders" },
+            { key: "analysis", label: "Insights" },
+            { key: "products", label: "Menu Items" },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              className={`${styles.tabBtn} ${section === key ? styles.active : ""}`}
+              onClick={() => setSection(key)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        {/* Orders View */}
-        {section === "orders" && (
-          <div style={{ width: "100%" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
-              <h2 style={titleStyle}>Restaurant Management Dashboard</h2>
-              <button
-                onClick={() => fetchOrders(true)}
-                style={{
-                  padding: "8px 18px",
-                  background: "#6366f1",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  boxShadow: "0 2px 8px #6366f133",
-                  marginLeft: 8,
-                  marginTop: 8,
-                  minWidth: 110
-                }}
-                title="Refresh Orders"
-              >
-                &#x21bb; Refresh
-              </button>
-            </div>
-            <OrderStats orders={filteredOrders} />
-            <div style={{ display: "flex", gap: 16, marginBottom: 24, justifyContent: "center" }}>
-              <button style={filterBtn(activeFilter === "today")} onClick={() => filterByDate("today")}>Today</button>
-              <button style={filterBtn(activeFilter === "week")} onClick={() => filterByDate("week")}>Last Week</button>
-              <button style={filterBtn(activeFilter === "month")} onClick={() => filterByDate("month")}>Last Month</button>
-              <button style={filterBtn(activeFilter === "all")} onClick={() => { setFilteredOrders(orders); setActiveFilter("all"); }}>All Time</button>
-            </div>
-            <OrderFilter onFilter={handleFilter} />
-            {loading && <p style={{ textAlign: "center", color: "#6366f1", fontWeight: 600 }}>Loading orders...</p>}
-            {error && (
-              <div
-                style={{
-                  color: "#c62828",
-                  background: "#ffebee",
-                  padding: "10px",
-                  borderRadius: "4px",
-                  marginBottom: "20px",
-                  textAlign: "center",
-                  fontWeight: 600
-                }}
-              >
-                {error}
+
+        <div className={styles.panel}>
+
+          {/* Orders */}
+          {section === "orders" && (
+            <div>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>Order Management</h2>
+                <button className={styles.refreshBtn} onClick={() => fetchOrders(true)}>
+                  <RefreshCw size={14} /> Refresh
+                </button>
               </div>
-            )}
-            {filteredOrders.length > 0 && (
-              <div style={{ overflowX: "auto" }}>
+
+              <OrderStats orders={filteredOrders} />
+
+              <div className={styles.dateFilters}>
+                {DATE_FILTERS.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    className={`${styles.dateFilterBtn} ${activeFilter === key ? styles.active : ""}`}
+                    onClick={() => {
+                      if (key === "all") { setFilteredOrders(orders); setActiveFilter("all"); }
+                      else filterByDate(key);
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <OrderFilter onFilter={handleFilter} />
+
+              {loading && <div className={styles.loadingWrap}>Loading orders…</div>}
+              {error && <div className={styles.errorMsg}>{error}</div>}
+
+              {filteredOrders.length > 0 && (
                 <OrderTable
                   orders={filteredOrders}
-                  statusOptions={statusOptions}
+                  statusOptions={STATUS_OPTIONS}
                   onStatusChange={handleStatusChange}
                   onPaymentStatusChange={handlePaymentStatusChange}
                   getDateString={getDateString}
-                  statusColorMap={{
-                    Delivered: "#22c55e",   // green
-                    Processing: "#2563eb",  // blue
-                    Cancelled: "#e53935"    // red
-                  }}
                 />
+              )}
+
+              {!loading && filteredOrders.length === 0 && (
+                <div className={styles.emptyOrders}>No orders found.</div>
+              )}
+            </div>
+          )}
+
+          {/* Insights */}
+          {section === "analysis" && (
+            <div>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>Order Insights</h2>
               </div>
-            )}
-            {!loading && filteredOrders.length === 0 && (
-              <p style={{ textAlign: "center", color: "#888", fontWeight: 500 }}>No orders found.</p>
-            )}
-          </div>
-        )}
-        {/* Analysis View */}
-        {section === "analysis" && (
-          <div style={{ width: "100%", textAlign: "center" }}>
-            <h2 style={{ ...titleStyle, marginBottom: 32 }}>Orders Insights</h2>
-            <OrderAnalysis orders={orders} />
-          </div>
-        )}
-        {/* Products View */}
-        {section === "products" && (
-          <div style={{ width: "100%" }}>
-            <ProductManager />
-          </div>
-        )}
+              <OrderAnalysis orders={orders} />
+            </div>
+          )}
+
+          {/* Menu Items */}
+          {section === "products" && (
+            <div>
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle}>Menu Management</h2>
+              </div>
+              <ProductManager />
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   );

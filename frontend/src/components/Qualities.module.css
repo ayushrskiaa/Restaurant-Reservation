@@ -1,0 +1,100 @@
+/* WHY CHOOSE US */
+
+.section {
+  background: #f9f9f9;
+  padding: 112px 32px;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.header {
+  max-width: 520px;
+  margin-bottom: 60px;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e85d04;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.labelDash { width: 20px; height: 1.5px; background: #e85d04; }
+
+.heading {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: #0f0f0f;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.subheading {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: #ebebeb;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card {
+  background: #fff;
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 180ms;
+}
+
+.card:hover { background: #fffaf7; }
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fff7f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e85d04;
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f0f0f;
+  letter-spacing: -0.3px;
+}
+
+.cardDesc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .section { padding: 72px 20px; }
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 32px 24px; }
+}

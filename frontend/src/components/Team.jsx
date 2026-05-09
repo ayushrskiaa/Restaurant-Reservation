@@ -1,33 +1,35 @@
-// import React from "react";
 import { data } from "../restApi.json";
-const Team = () => {
-  return (
-    <section className="team" id="team">
-      <div className="container">
-        <div className="heading_section">
-          <h1 className="heading">OUR TEAM</h1>
-          <p>
-            Our chefs are the heart and soul of our café, bringing passion and
-            creativity to every dish they prepare. With years of experience and
-            a love for culinary artistry, they craft meals that delight your
-            taste buds and warm your heart. From classic recipes to innovative
-            creations, our chefs ensure every bite is a memorable experience.
-          </p>
+import styles from "./Team.module.css";
+
+const Team = () => (
+  <section className={styles.section} id="team">
+    <div className={styles.inner}>
+      <div className={styles.header}>
+        <div className={styles.sectionLabel}>
+          <span className={styles.labelDash} /> The Kitchen
         </div>
-        <div className="team_container">
-          {data[0].team.map((element) => {
-            return (
-              <div className="card" key={element.id}>
-                <img src={element.image} alt={element.name} />
-                <h3>{element.name}</h3>
-                <p>{element.designation}</p>
-              </div>
-            );
-          })}
-        </div>
+        <h2 className={styles.heading}>Meet Our Chefs</h2>
+        <p className={styles.subheading}>
+          Passionate craftsmen who turn the finest ingredients into unforgettable dishes.
+        </p>
       </div>
-    </section>
-  );
-};
+
+      <div className={styles.grid}>
+        {data[0].team.map(member => (
+          <div key={member.id} className={styles.card}>
+            <div className={styles.imageWrap}>
+              <img src={member.image} alt={member.name} className={styles.cardImg} loading="lazy" />
+            </div>
+            <div className={styles.cardBody}>
+              <h3 className={styles.cardName}>{member.name}</h3>
+              <p className={styles.cardRole}>{member.designation}</p>
+              <div className={styles.cardAccent} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
 export default Team;

@@ -1,86 +1,103 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { data } from "../restApi.json";
 import { Link } from "react-scroll";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { HiOutlineShoppingCart } from "react-icons/hi";
-// import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { MdOutlineDeliveryDining, MdOutlineAnalytics } from "react-icons/md"; // Add MdOutlineAnalytics import
+import { Link as RouterLink } from "react-router-dom";
+import { ShoppingBag, LayoutDashboard, Menu, X, Utensils } from "lucide-react";
 import OrderMenu from "./orderMenu";
 import OrderDetails from "./OrderDetails";
-import { Link as RouterLink } from "react-router-dom"; // Import Link and useNavigate from react-router-dom
+import styles from "./Navbar.module.css";
 
 const Navbar = () => {
-  const [show, setShow] = useState(false);
-  const [sideMenuOpen, setSideMenuOpen] = useState(false); // State for side menu
-  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false); // State for order details
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
-  const toggleSideMenu = () => {
-    setSideMenuOpen(!sideMenuOpen);
-    // Close order details if open
-    if (orderDetailsOpen) setOrderDetailsOpen(false);
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const toggleOrderDetails = () => {
-    setOrderDetailsOpen(!orderDetailsOpen);
-    // Close side menu if open
-    if (sideMenuOpen) setSideMenuOpen(false);
-  };
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("cart");
+      if (saved) {
+        const c = JSON.parse(saved);
+        setCartCount(Array.isArray(c) ? c.length : 0);
+      }
+    } catch { setCartCount(0); }
+  }, []);
+
+  const openSideMenu = () => { setSideMenuOpen(true); setOrderDetailsOpen(false); setMobileOpen(false); };
+  const openOrderDetails = () => { setOrderDetailsOpen(true); setSideMenuOpen(false); setMobileOpen(false); };
 
   return (
     <>
-      <nav>
-        <div className="logo">RSKIAA'S CAFE</div>
+      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+        <div className={styles.navContainer}>
+          <RouterLink to="/" className={styles.logo}>
+            <div className={styles.logoMark}><Utensils size={16} /></div>
+            <span className={styles.logoText}>Rskiaa's</span>
+          </RouterLink>
 
-        {/* <button
-          className="menuBtn"
-          style={{ border: "2px solid black" }}
-          onClick={toggleSideMenu}
-        >
-          <MdOutlineRestaurantMenu style={{ fontSize: "20px", marginRight: "5px" }} />
-          DINE IN
-        </button> */}
-        <div className={show ? "navLinks showmenu" : "navLinks"}>
-          <div className="links">
-            {data[0].navbarLinks.map((element) => (
-              <Link
-                to={element.link}
-                spy={true}
-                smooth={true}
-                duration={500}
-                key={element.id}
-              >
-                {element.title}
+          <div className={styles.links}>
+            {data[0]?.navbarLinks?.map(el => (
+              <Link key={el.id} to={el.link} spy smooth duration={500} className={styles.navLink}>
+                {el.title}
               </Link>
             ))}
           </div>
 
-          <button className="menuBtn" onClick={toggleSideMenu}>
-            <MdOutlineDeliveryDining style={{ fontSize: "20px", marginRight: "5px" }} />
-            ORDER ONLINE
-          </button>
+          <div className={styles.navActions}>
+            <button className={styles.iconBtn} onClick={openSideMenu}>
+              <Utensils size={14} /> Order
+            </button>
+            <button className={`${styles.iconBtn} ${styles.cartButton}`} onClick={openOrderDetails} style={{ position: "relative" }}>
+              <ShoppingBag size={14} /> Cart
+              {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+            </button>
+            <RouterLink to="/restaurant-dashboard" className={styles.ctaBtn}>
+              <LayoutDashboard size={14} /> Dashboard
+            </RouterLink>
+          </div>
 
-          <button className="menuBtn" onClick={toggleOrderDetails}>
-            <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />
-            ORDERS
+          <button
+            className={`${styles.hamburger} ${mobileOpen ? styles.active : ""}`}
+            onClick={() => setMobileOpen(v => !v)}
+            aria-label="Toggle menu"
+          >
+            <span /><span /><span />
           </button>
-          <RouterLink to="/restaurant-dashboard" className="menuBtn" style={{ textDecoration: "none" }}>
-            <MdOutlineAnalytics style={{ fontSize: "20px", marginRight: "5px" }} />
-            VISIT ANALYTICS DASHBOARD
-          </RouterLink>
         </div>
-        <div className="hamburger" onClick={() => setShow(!show)}>
-          <GiHamburgerMenu />
+
+        <div className={`${styles.mobileMenu} ${mobileOpen ? styles.active : ""}`}>
+          {data[0]?.navbarLinks?.map(el => (
+            <Link key={el.id} to={el.link} spy smooth duration={500}
+              className={styles.navLink} onClick={() => setMobileOpen(false)}>
+              {el.title}
+            </Link>
+          ))}
+          <div className={styles.mobileDivider} />
+          <div className={styles.mobileActions}>
+            <button className={styles.iconBtn} onClick={openSideMenu} style={{ width: "100%", justifyContent: "center" }}>
+              <Utensils size={14} /> Order Online
+            </button>
+            <button className={styles.iconBtn} onClick={openOrderDetails} style={{ width: "100%", justifyContent: "center" }}>
+              <ShoppingBag size={14} /> Cart {cartCount > 0 && `(${cartCount})`}
+            </button>
+            <RouterLink to="/restaurant-dashboard" className={styles.ctaBtn} style={{ justifyContent: "center" }}>
+              <LayoutDashboard size={14} /> Dashboard
+            </RouterLink>
+          </div>
         </div>
       </nav>
 
-      {/* Render the OrderMenu component */}
-      {sideMenuOpen && <OrderMenu toggleSideMenu={toggleSideMenu} />}
-
-      {/* Render the OrderDetails component */}
-      {orderDetailsOpen && <OrderDetails toggleOrderDetails={toggleOrderDetails} />}
+      {sideMenuOpen && <OrderMenu toggleSideMenu={() => setSideMenuOpen(false)} />}
+      {orderDetailsOpen && <OrderDetails toggleOrderDetails={() => setOrderDetailsOpen(false)} />}
     </>
   );
 };
 
 export default Navbar;
-

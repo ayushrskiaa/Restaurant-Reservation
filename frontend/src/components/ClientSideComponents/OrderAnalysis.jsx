@@ -1,90 +1,62 @@
 import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import OrderTable from "./OrderTable";
+import styles from "./OrderAnalysis.module.css";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, BarChart, Bar
 } from "recharts";
 
-const statusOptions = [
-  "All",
-  "Processing",
-  "Preparing",
-  "Out for Delivery",
-  "Delivered",
-  "Cancelled"
-];
+const statusOptions = ["All", "Processing", "Preparing", "Out for Delivery", "Delivered", "Cancelled"];
+const paymentOptions = ["All", "Cash on Delivery", "Online"];
+const COLORS = ["#e85d04", "#16a34a", "#d97706", "#dc2626", "#0d9488", "#8b5cf6", "#0f0f0f"];
 
-const paymentOptions = [
-  "All",
-  "Cash on Delivery",
-  "Online"
-];
-
-const COLORS = ["#6366f1", "#43a047", "#fb8c00", "#e53935", "#0d9488", "#f59e42", "#3b3b5c"];
+const STATUS_COLORS = {
+  Delivered: "#16a34a",
+  Cancelled: "#dc2626",
+  Processing: "#1d4ed8",
+  Preparing: "#d97706",
+  "Out for Delivery": "#c2410c",
+};
 
 const getDateString = (date) => {
   const d = new Date(date);
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}${month}${year}`;
+  return `${String(d.getDate()).padStart(2, "0")}${String(d.getMonth() + 1).padStart(2, "0")}${d.getFullYear()}`;
 };
 
-// Utility to export CSV with date range and stats
-const exportOrdersToCSV = (orders, stats, getDateString, from, to) => {
-  const headers = [
-    "S. No.",
-    "Order ID",
-    "Customer",
-    "Phone",
-    "Status",
-    "Total",
-    "Payment",
-    "Order Date",
-    "Items"
-  ];
+const exportOrdersToCSV = (orders, stats, from, to) => {
+  const headers = ["S. No.", "Order ID", "Customer", "Phone", "Status", "Total", "Payment", "Order Date", "Items"];
   const rows = orders.map((order, idx) => [
-    idx + 1,
-    order._id,
-    order.customerName || "N/A",
-    order.phoneNumber || "N/A",
-    order.status,
-    order.totalPrice,
+    idx + 1, order._id, order.customerName || "N/A", order.phoneNumber || "N/A",
+    order.status, order.totalPrice,
     order.paymentMethod + (order.paymentMethod === "Cash on Delivery" ? ` (${order.paymentDone ? "Done" : "Not Done"})` : ""),
-    getDateString ? getDateString(order.createdAt) : order.createdAt,
-    order.items.map(item => `${item.title} x ${item.quantity}`).join("; ")
+    getDateString(order.createdAt),
+    order.items.map(i => `${i.title} x ${i.quantity}`).join("; ")
   ]);
 
-  // Find date range
   let fromDate = "", toDate = "";
   if (orders.length > 0) {
-    const sortedByDate = [...orders].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    fromDate = getDateString ? getDateString(sortedByDate[0].createdAt) : sortedByDate[0].createdAt;
-    toDate = getDateString ? getDateString(sortedByDate[sortedByDate.length - 1].createdAt) : sortedByDate[sortedByDate.length - 1].createdAt;
+    const sorted = [...orders].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    fromDate = getDateString(sorted[0].createdAt);
+    toDate = getDateString(sorted[sorted.length - 1].createdAt);
   } else {
     fromDate = from ? getDateString(from) : "";
     toDate = to ? getDateString(to) : "";
   }
 
-  // Add stats and date range at the top
   const statsRows = [
     [`Data from: ${fromDate} to ${toDate}`],
-    [`Total Orders: ${stats.total}`],
-    [`Delivered: ${stats.delivered}`],
-    [`Pending: ${stats.pending}`],
-    [`Cancelled: ${stats.cancelled}`],
-    [`Total Income: ₹${stats.income}`],
-    [""]
+    [`Total Orders: ${stats.total}`], [`Delivered: ${stats.delivered}`],
+    [`Pending: ${stats.pending}`], [`Cancelled: ${stats.cancelled}`],
+    [`Total Income: ₹${stats.income}`], [""]
   ];
+
   const csvContent =
     statsRows.map(r => r.join(",")).join("\n") +
     headers.join(",") + "\n" +
-    rows.map(r => r.map(field => `"${String(field).replace(/"/g, '""')}"`).join(",")).join("\n");
+    rows.map(r => r.map(f => `"${String(f).replace(/"/g, '""')}"`).join(",")).join("\n");
 
-  // Add BOM for UTF-8
-  const BOM = "\uFEFF";
-  const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["﻿" + csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.setAttribute("download", `orders_analysis_${Date.now()}.csv`);
@@ -102,206 +74,167 @@ const OrderAnalysis = ({ orders }) => {
   const [customer, setCustomer] = useState("");
   const [phone, setPhone] = useState("");
 
-  // Filter orders by date, status, payment, item, customer, phone
-  const filteredOrders = useMemo(() => {
-    return orders.filter(order => {
-      const orderDate = new Date(order.createdAt);
-      let valid = true;
-      if (from) valid = valid && orderDate >= new Date(from);
-      if (to) valid = valid && orderDate <= new Date(to + "T23:59:59");
-      if (status !== "All") valid = valid && order.status === status;
-      if (payment !== "All") valid = valid && order.paymentMethod === payment;
-      if (item)
-        valid = valid && order.items.some(i => i.title.toLowerCase().includes(item.toLowerCase()));
-      if (customer)
-        valid = valid && order.customerName?.toLowerCase().includes(customer.toLowerCase());
-      if (phone)
-        valid = valid && order.phoneNumber?.includes(phone);
-      return valid;
-    });
-  }, [orders, from, to, status, payment, item, customer, phone]);
+  const filteredOrders = useMemo(() => orders.filter(order => {
+    const d = new Date(order.createdAt);
+    let ok = true;
+    if (from) ok = ok && d >= new Date(from);
+    if (to)   ok = ok && d <= new Date(to + "T23:59:59");
+    if (status !== "All")  ok = ok && order.status === status;
+    if (payment !== "All") ok = ok && order.paymentMethod === payment;
+    if (item)     ok = ok && order.items.some(i => i.title.toLowerCase().includes(item.toLowerCase()));
+    if (customer) ok = ok && order.customerName?.toLowerCase().includes(customer.toLowerCase());
+    if (phone)    ok = ok && order.phoneNumber?.includes(phone);
+    return ok;
+  }), [orders, from, to, status, payment, item, customer, phone]);
 
-  // Stats
   const total = filteredOrders.length;
   const delivered = filteredOrders.filter(o => o.status === "Delivered").length;
   const cancelled = filteredOrders.filter(o => o.status === "Cancelled").length;
   const pending = filteredOrders.filter(o => o.status !== "Delivered" && o.status !== "Cancelled").length;
   const income = filteredOrders
-    .filter(
-      o =>
-        o.status === "Delivered" &&
-        (o.paymentMethod !== "Cash on Delivery" || o.paymentDone)
-    )
+    .filter(o => o.status === "Delivered" && (o.paymentMethod !== "Cash on Delivery" || o.paymentDone))
     .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
   const avgOrderValue = total > 0 ? (filteredOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0) / total).toFixed(2) : 0;
 
-  // Top selling items
   const topItems = useMemo(() => {
-    const itemMap = {};
-    filteredOrders.forEach(order => {
-      order.items.forEach(i => {
-        itemMap[i.title] = (itemMap[i.title] || 0) + i.quantity;
-      });
-    });
-    return Object.entries(itemMap)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    const map = {};
+    filteredOrders.forEach(o => o.items.forEach(i => { map[i.title] = (map[i.title] || 0) + i.quantity; }));
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 5);
   }, [filteredOrders]);
 
-  // Orders trend (for line chart)
   const orderTrends = useMemo(() => {
     const map = {};
-    filteredOrders.forEach(order => {
-      const date = getDateString(order.createdAt);
-      map[date] = (map[date] || 0) + 1;
-    });
+    filteredOrders.forEach(o => { const d = getDateString(o.createdAt); map[d] = (map[d] || 0) + 1; });
     return Object.entries(map).map(([date, count]) => ({ date, count }));
   }, [filteredOrders]);
 
-  // Payment method breakdown (for pie chart)
   const paymentBreakdown = useMemo(() => {
     const map = {};
-    filteredOrders.forEach(order => {
-      map[order.paymentMethod] = (map[order.paymentMethod] || 0) + 1;
-    });
+    filteredOrders.forEach(o => { map[o.paymentMethod] = (map[o.paymentMethod] || 0) + 1; });
     return Object.entries(map).map(([name, value]) => ({ name, value }));
   }, [filteredOrders]);
 
-  // Status breakdown (for pie chart)
   const statusBreakdown = useMemo(() => {
     const map = {};
-    filteredOrders.forEach(order => {
-      map[order.status] = (map[order.status] || 0) + 1;
-    });
+    filteredOrders.forEach(o => { map[o.status] = (map[o.status] || 0) + 1; });
     return Object.entries(map).map(([name, value]) => ({ name, value }));
   }, [filteredOrders]);
 
-  // Customer frequency (top customers with phone numbers)
   const topCustomers = useMemo(() => {
     const map = {};
-    filteredOrders.forEach(order => {
-      if (!order.customerName || !order.phoneNumber) return;
-      const key = `${order.customerName}__${order.phoneNumber}`;
+    filteredOrders.forEach(o => {
+      if (!o.customerName || !o.phoneNumber) return;
+      const key = `${o.customerName}__${o.phoneNumber}`;
       map[key] = (map[key] || 0) + 1;
     });
-    return Object.entries(map)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([key, count]) => {
-        const [name, phone] = key.split("__");
-        return { name, phone, count };
-      });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(([key, count]) => { const [name, phone] = key.split("__"); return { name, phone, count }; });
   }, [filteredOrders]);
 
   return (
-    <div style={{ background: "#fff", borderRadius: 12, padding: 32, boxShadow: "0 4px 24px #6366f122", margin: "32px auto", maxWidth: 1200 }}>
-      <h2 style={{ textAlign: "center", marginBottom: 24, color: "#3b3b5c" }}>Order Analysis Tool</h2>
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", marginBottom: 24 }}>
-        <div>
-          <label>From: </label>
-          <input type="date" value={from} onChange={e => setFrom(e.target.value)} />
+    <div>
+      {/* Filters */}
+      <div className={styles.filterSection}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>From</label>
+          <input className={styles.filterInput} type="date" value={from} onChange={e => setFrom(e.target.value)} />
         </div>
-        <div>
-          <label>To: </label>
-          <input type="date" value={to} onChange={e => setTo(e.target.value)} />
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>To</label>
+          <input className={styles.filterInput} type="date" value={to} onChange={e => setTo(e.target.value)} />
         </div>
-        <div>
-          <label>Status: </label>
-          <select value={status} onChange={e => setStatus(e.target.value)}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Status</label>
+          <select className={styles.filterSelect} value={status} onChange={e => setStatus(e.target.value)}>
             {statusOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
           </select>
         </div>
-        <div>
-          <label>Payment: </label>
-          <select value={payment} onChange={e => setPayment(e.target.value)}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Payment</label>
+          <select className={styles.filterSelect} value={payment} onChange={e => setPayment(e.target.value)}>
             {paymentOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
           </select>
         </div>
-        <div>
-          <label>Item: </label>
-          <input type="text" value={item} onChange={e => setItem(e.target.value)} placeholder="Item name" />
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Item</label>
+          <input className={styles.filterInput} type="text" value={item} onChange={e => setItem(e.target.value)} placeholder="Item name" />
         </div>
-        <div>
-          <label>Customer: </label>
-          <input type="text" value={customer} onChange={e => setCustomer(e.target.value)} placeholder="Customer name" />
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Customer</label>
+          <input className={styles.filterInput} type="text" value={customer} onChange={e => setCustomer(e.target.value)} placeholder="Customer name" />
         </div>
-        <div>
-          <label>Phone: </label>
-          <input type="text" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" />
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Phone</label>
+          <input className={styles.filterInput} type="text" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" />
         </div>
         <button
-          style={{
-            padding: "8px 18px",
-            background: "#6366f1",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 2px 8px #6366f133",
-            marginLeft: 16
-          }}
-          onClick={() => exportOrdersToCSV(filteredOrders, { total, delivered, pending, cancelled, income }, getDateString, from, to)}
+          className={styles.exportBtn}
+          onClick={() => exportOrdersToCSV(filteredOrders, { total, delivered, pending, cancelled, income }, from, to)}
           disabled={filteredOrders.length === 0}
         >
-          Export Analysis as CSV
+          Export CSV
         </button>
       </div>
-      <div style={{ textAlign: "center", marginBottom: 16, color: "#6366f1", fontWeight: 500 }}>
-        {filteredOrders.length > 0
-          ? `Data from: ${
-              filteredOrders.length > 0
-                ? getDateString(filteredOrders[0].createdAt)
-                : ""
-            } to ${
-              filteredOrders.length > 0
-                ? getDateString(filteredOrders[filteredOrders.length - 1].createdAt)
-                : ""
-            }`
-          : "No data for selected filters."}
-      </div>
-      <div style={{ display: "flex", gap: 32, justifyContent: "center", marginBottom: 24, flexWrap: "wrap" }}>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 120, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Total</div>
-          <div style={{ fontSize: 22, color: "#6366f1" }}>{total}</div>
+
+      {filteredOrders.length > 0 && (
+        <p className={styles.dateRange}>
+          Showing data from {getDateString(filteredOrders[0].createdAt)} to {getDateString(filteredOrders[filteredOrders.length - 1].createdAt)}
+        </p>
+      )}
+      {filteredOrders.length === 0 && (
+        <p className={styles.dateRange}>No data for selected filters.</p>
+      )}
+
+      {/* Stats */}
+      <div className={styles.statsRow}>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Total</div>
+          <div className={styles.statNum}>{total}</div>
         </div>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 120, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Delivered</div>
-          <div style={{ fontSize: 22, color: "#43a047" }}>{delivered}</div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Delivered</div>
+          <div className={`${styles.statNum} ${styles.clrGreen}`}>{delivered}</div>
         </div>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 120, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Pending</div>
-          <div style={{ fontSize: 22, color: "#fb8c00" }}>{pending}</div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Pending</div>
+          <div className={`${styles.statNum} ${styles.clrOrange}`}>{pending}</div>
         </div>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 120, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Cancelled</div>
-          <div style={{ fontSize: 22, color: "#e53935" }}>{cancelled}</div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Cancelled</div>
+          <div className={`${styles.statNum} ${styles.clrRed}`}>{cancelled}</div>
         </div>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 160, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Total Income</div>
-          <div style={{ fontSize: 22, color: "#0d9488" }}>₹{income}</div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Total Income</div>
+          <div className={`${styles.statNum} ${styles.clrTeal}`}>₹{income}</div>
         </div>
-        <div style={{ background: "#f3f4f6", borderRadius: 8, padding: 16, minWidth: 160, textAlign: "center" }}>
-          <div style={{ fontWeight: 700, fontSize: 18 }}>Avg. Order Value</div>
-          <div style={{ fontSize: 22, color: "#6366f1" }}>₹{avgOrderValue}</div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Avg. Order</div>
+          <div className={`${styles.statNum} ${styles.clrAccent}`}>₹{avgOrderValue}</div>
         </div>
       </div>
-      <div style={{ display: "flex", gap: 32, flexWrap: "wrap", justifyContent: "center", margin: "32px 0" }}>
-        <div style={{ background: "#f9fafb", borderRadius: 8, padding: 16, minWidth: 320 }}>
-          <h4 style={{ textAlign: "center" }}>Payment Method Breakdown</h4>
+
+      {/* Charts */}
+      <div className={styles.chartsGrid}>
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Payment Breakdown</div>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
-              <Pie
-                data={paymentBreakdown}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={70}
-                label
-              >
-                {paymentBreakdown.map((entry, idx) => (
-                  <Cell key={`cell-p-${idx}`} fill={COLORS[idx % COLORS.length]} />
+              <Pie data={paymentBreakdown} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label>
+                {paymentBreakdown.map((_, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
+              </Pie>
+              <Legend />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Status Breakdown</div>
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Pie data={statusBreakdown} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label>
+                {statusBreakdown.map((entry, idx) => (
+                  <Cell key={idx} fill={STATUS_COLORS[entry.name] || COLORS[idx % COLORS.length]} />
                 ))}
               </Pie>
               <Legend />
@@ -309,95 +242,67 @@ const OrderAnalysis = ({ orders }) => {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div style={{ background: "#f9fafb", borderRadius: 8, padding: 16, minWidth: 320 }}>
-          <h4 style={{ textAlign: "center" }}>Order Status Breakdown</h4>
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={statusBreakdown}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={70}
-                label={({ name }) => {
-                  if (name === "Cancelled") return <span style={{ color: "#e53935" }}>{name}</span>;
-                  if (name === "Delivered") return <span style={{ color: "#43a047" }}>{name}</span>;
-                  if (name === "Processing") return <span style={{ color: "#2563eb" }}>{name}</span>;
-                  return name;
-                }}
-              >
-                {statusBreakdown.map((entry, idx) => {
-                  let fill = COLORS[idx % COLORS.length];
-                  if (entry.name === "Cancelled") fill = "#e53935";
-                  if (entry.name === "Delivered") fill = "#43a047";
-                  if (entry.name === "Processing") fill = "#2563eb";
-                  return <Cell key={`cell-s-${idx}`} fill={fill} />;
-                })}
-              </Pie>
-              <Legend
-                formatter={(value) => {
-                  if (value === "Cancelled") return <span style={{ color: "#e53935" }}>{value}</span>;
-                  if (value === "Delivered") return <span style={{ color: "#43a047" }}>{value}</span>;
-                  if (value === "Processing") return <span style={{ color: "#2563eb" }}>{value}</span>;
-                  return value;
-                }}
-              />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div style={{ background: "#f9fafb", borderRadius: 8, padding: 16, minWidth: 320 }}>
-          <h4 style={{ textAlign: "center" }}>Top Customers</h4>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-            {topCustomers.map(({ name, phone, count }) => (
-              <li key={name + phone} style={{ padding: "4px 0", fontWeight: 500 }}>
-                {name} ({phone}): {count} orders
-              </li>
-            ))}
-          </ul>
+
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Top Customers</div>
+          {topCustomers.length === 0 ? (
+            <p style={{ color: "#888", fontSize: "0.875rem", textAlign: "center", marginTop: 32 }}>No data</p>
+          ) : (
+            <ul className={styles.topList}>
+              {topCustomers.map(({ name, phone: ph, count }) => (
+                <li key={name + ph} className={styles.topListItem}>
+                  <div className={styles.topListInfo}>
+                    <span className={styles.topListName}>{name}</span>
+                    <span className={styles.topListPhone}>{ph}</span>
+                  </div>
+                  <span className={styles.topListCount}>{count} orders</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
-      <div style={{ margin: "32px 0" }}>
-        <h4>Orders Trend</h4>
+
+      {/* Orders trend */}
+      <div className={styles.trendSection}>
+        <div className={styles.trendTitle}>Orders Trend</div>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={orderTrends}>
-            <XAxis dataKey="date" />
-            <YAxis allowDecimals={false} />
+            <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
             <Tooltip />
-            <CartesianGrid stroke="#eee" />
-            <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} />
+            <CartesianGrid stroke="#e5e5e5" />
+            <Line type="monotone" dataKey="count" stroke="#e85d04" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div style={{ margin: "24px 0" }}>
-        <h4>Top Selling Items</h4>
+
+      {/* Top selling items */}
+      <div className={styles.trendSection}>
+        <div className={styles.trendTitle}>Top Selling Items</div>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={topItems.map(([title, qty]) => ({ title, qty }))}>
-            <XAxis dataKey="title" />
-            <YAxis allowDecimals={false} />
+            <XAxis dataKey="title" tick={{ fontSize: 11 }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
             <Tooltip />
-            <CartesianGrid stroke="#eee" />
-            <Bar dataKey="qty" fill="#6366f1">
-              {topItems.map((entry, idx) => (
-                <Cell key={`cell-bar-${idx}`} fill={COLORS[idx % COLORS.length]} />
-              ))}
+            <CartesianGrid stroke="#e5e5e5" />
+            <Bar dataKey="qty" radius={[4, 4, 0, 0]}>
+              {topItems.map((_, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
+
       <OrderTable
         orders={filteredOrders}
         statusOptions={statusOptions.slice(1)}
         onStatusChange={() => {}}
-        onPaymentStatusChange={() => {}}
+        onPaymentStatusChange={() => Promise.resolve()}
         getDateString={getDateString}
       />
     </div>
   );
 };
-OrderAnalysis.propTypes = {
-  orders: PropTypes.array.isRequired
-};
 
+OrderAnalysis.propTypes = { orders: PropTypes.array.isRequired };
 export default OrderAnalysis;

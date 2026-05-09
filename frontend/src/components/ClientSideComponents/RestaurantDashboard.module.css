@@ -1,0 +1,436 @@
+.page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 40px 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* --- Section tabs --- */
+.tabBar {
+  display: flex;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
+  border: 1px solid #ebebeb;
+  border-bottom: none;
+  padding: 0 8px;
+  overflow-x: auto;
+}
+
+.tabBtn {
+  padding: 14px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+
+.tabBtn:hover { color: #0f0f0f; }
+.tabBtn.active {
+  color: #0f0f0f;
+  border-bottom-color: #e85d04;
+}
+
+/* --- Main panel --- */
+.panel {
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid #ebebeb;
+  border-top: none;
+  padding: 32px;
+}
+
+/* --- Section header --- */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f0f0f;
+  margin: 0;
+}
+
+.refreshBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #0f0f0f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.refreshBtn:hover { background: #e85d04; }
+
+/* --- Date filter pills --- */
+.dateFilters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.dateFilterBtn {
+  padding: 6px 14px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dateFilterBtn:hover {
+  border-color: #0f0f0f;
+  color: #0f0f0f;
+}
+
+.dateFilterBtn.active {
+  background: #0f0f0f;
+  border-color: #0f0f0f;
+  color: #fff;
+}
+
+/* --- States --- */
+.loadingWrap {
+  text-align: center;
+  padding: 48px 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.errorMsg {
+  background: #fff5f5;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.emptyOrders {
+  text-align: center;
+  color: #888;
+  padding: 48px 0;
+  font-size: 0.9rem;
+}
+
+/* ==============================
+   Product Manager
+   ============================== */
+.pmTabBar {
+  display: flex;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 28px;
+  gap: 4px;
+}
+
+.pmTab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+}
+
+.pmTab:hover { color: #0f0f0f; }
+.pmTab.active {
+  color: #0f0f0f;
+  border-bottom-color: #e85d04;
+}
+
+.pmMsg {
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  color: #16a34a;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.pmMsgError {
+  background: #fff5f5;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* Product table */
+.tableWrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #ebebeb;
+}
+
+.productTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.productTable thead tr {
+  background: #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.productTable th {
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+.productTable th:first-child { text-align: center; width: 90px; }
+.productTable th:nth-child(3) { text-align: right; width: 130px; }
+.productTable th:last-child { text-align: center; width: 190px; }
+
+.productTable td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.875rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+.productTable tr:last-child td { border-bottom: none; }
+.productTable tbody tr:hover { background: #fafafa; }
+
+.productThumb {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+.productThumbEmpty {
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: center;
+}
+
+.tdRight { text-align: right; }
+.tdCenter { text-align: center; }
+
+/* Inline edit */
+.editInput {
+  padding: 6px 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  width: 90%;
+  outline: none;
+}
+
+.editInput:focus { border-color: #0f0f0f; }
+.editInputPrice { width: 80px; text-align: right; }
+
+.editActionsCell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.editBtnRow {
+  display: flex;
+  gap: 6px;
+}
+
+/* Buttons */
+.btnEdit {
+  padding: 5px 14px;
+  background: #0f0f0f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnEdit:hover { background: #333; }
+
+.btnSave {
+  padding: 5px 14px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnCancel {
+  padding: 5px 14px;
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnDelete {
+  padding: 5px 14px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.noProducts {
+  text-align: center;
+  color: #888;
+  padding: 32px;
+  font-size: 0.875rem;
+}
+
+/* Add product form */
+.addForm {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.addInput,
+.addSelect {
+  padding: 9px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #0f0f0f;
+  background: #fff;
+  outline: none;
+  min-width: 150px;
+}
+
+.addInput:focus,
+.addSelect:focus { border-color: #0f0f0f; }
+
+.addFileInput {
+  padding: 7px 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #555;
+  background: #fff;
+  min-width: 150px;
+}
+
+.btnAdd {
+  padding: 9px 20px;
+  background: #0f0f0f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btnAdd:hover { background: #e85d04; }
+
+/* Responsive product table */
+@media (max-width: 900px) {
+  .productTable,
+  .productTable thead,
+  .productTable tbody,
+  .productTable th,
+  .productTable td,
+  .productTable tr {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .productTable thead { display: none !important; }
+
+  .productTable tr {
+    margin-bottom: 14px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .productTable td {
+    text-align: left;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 8px 6px;
+  }
+
+  .productTable td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+  }
+
+  .productThumb { margin: 0; }
+}
+
+@media (max-width: 768px) {
+  .page { padding: 24px 16px; }
+  .panel { padding: 20px 16px; }
+  .tabBtn { padding: 12px 16px; font-size: 0.85rem; }
+}

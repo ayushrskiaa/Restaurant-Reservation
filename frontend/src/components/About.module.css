@@ -1,0 +1,165 @@
+/* ABOUT */
+
+.section {
+  background: #fff;
+  padding: 112px 32px;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 96px;
+  align-items: center;
+}
+
+/* Text */
+.textSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e85d04;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.labelDash {
+  width: 20px;
+  height: 1.5px;
+  background: #e85d04;
+}
+
+.heading {
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  color: #0f0f0f;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+}
+
+.body {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  color: #e85d04;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #0f0f0f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  width: fit-content;
+  transition: background 180ms ease;
+  font-family: inherit;
+}
+
+.cta:hover { background: #e85d04; }
+
+/* Image */
+.imageSide { position: relative; }
+
+.imageFrame {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.1);
+}
+
+.image {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Floating card */
+.floatCard {
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.floatIcon {
+  width: 44px;
+  height: 44px;
+  background: #fff7f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e85d04;
+}
+
+.floatNum {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f0f0f;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.floatLabel {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+@media (max-width: 1024px) {
+  .section { padding: 80px 24px; }
+  .inner { gap: 56px; }
+}
+
+@media (max-width: 768px) {
+  .section { padding: 72px 20px; }
+  .inner { grid-template-columns: 1fr; gap: 48px; }
+  .imageSide { order: -1; }
+  .image { height: 300px; }
+  .floatCard { left: 12px; bottom: 12px; }
+}

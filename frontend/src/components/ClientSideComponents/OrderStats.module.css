@@ -1,0 +1,43 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  padding: 20px 24px;
+  text-align: center;
+  border-top: 3px solid #ebebeb;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.num {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #0f0f0f;
+}
+
+.cardTotal { border-top-color: #0f0f0f; }
+.cardDelivered { border-top-color: #16a34a; }
+.cardPending { border-top-color: #d97706; }
+.cardCancelled { border-top-color: #dc2626; }
+
+.numDelivered { color: #16a34a; }
+.numPending { color: #d97706; }
+.numCancelled { color: #dc2626; }
