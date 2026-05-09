@@ -153,9 +153,9 @@
 }
 
 .actionButton:hover {
-  background-color: var(--color-light);
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  background-color: #fff7f0;
+  border-color: #e85d04;
+  color: #e85d04;
 }
 
 /* Cart Button with Badge */
@@ -173,11 +173,12 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  background-color: var(--color-accent);
+  background: #e85d04;
   color: var(--color-white);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
+  box-shadow: 0 2px 6px rgba(232, 93, 4, 0.4);
 }
 
 /* ============================================================================
@@ -186,24 +187,24 @@
 
 .ctaButton {
   padding: var(--space-sm) var(--space-lg);
-  background-color: var(--color-accent);
+  background: linear-gradient(135deg, #e85d04 0%, #f97316 100%);
   color: var(--color-white);
   border: none;
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+  box-shadow: 0 3px 12px rgba(232, 93, 4, 0.35);
 }
 
 .ctaButton:hover {
-  background-color: var(--color-accent-dark);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 6px 18px rgba(232, 93, 4, 0.5);
 }
 
 .ctaButton:active {

@@ -8,7 +8,7 @@ const OrderMenu = ({ toggleSideMenu }) => {
   const [cart, setCart] = useState({});
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState(null); // NEW
+  const [activeCategory, setActiveCategory] = useState("All");
   const navigate = useNavigate();
 
   const BASE_URL =
@@ -30,36 +30,40 @@ const OrderMenu = ({ toggleSideMenu }) => {
     fetchProducts();
   }, [BASE_URL]);
 
+  // Close on Escape key
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") toggleSideMenu();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [toggleSideMenu]);
+
   const addToCart = (item) => {
-    setCart((prevCart) => {
-      const newCart = { ...prevCart };
-      const numericPrice =
+    setCart((prev) => {
+      const price =
         typeof item.price === "string"
           ? parseFloat(item.price.replace("₹", "").replace(",", ""))
           : item.price;
-      if (newCart[item._id]) {
-        newCart[item._id].quantity += 1;
-      } else {
-        newCart[item._id] = {
-          ...item,
-          quantity: 1,
-          price: numericPrice,
-        };
-      }
-      return newCart;
+      const existing = prev[item._id];
+      return {
+        ...prev,
+        [item._id]: existing
+          ? { ...existing, quantity: existing.quantity + 1 }
+          : { ...item, quantity: 1, price },
+      };
     });
   };
 
   const removeFromCart = (item) => {
-    setCart((prevCart) => {
-      const newCart = { ...prevCart };
-      if (newCart[item._id] && newCart[item._id].quantity > 0) {
-        newCart[item._id].quantity -= 1;
-        if (newCart[item._id].quantity === 0) {
-          delete newCart[item._id];
-        }
+    setCart((prev) => {
+      if (!prev[item._id]) return prev;
+      if (prev[item._id].quantity <= 1) {
+        const next = { ...prev };
+        delete next[item._id];
+        return next;
       }
-      return newCart;
+      return { ...prev, [item._id]: { ...prev[item._id], quantity: prev[item._id].quantity - 1 } };
     });
   };
 
@@ -74,216 +78,150 @@ const OrderMenu = ({ toggleSideMenu }) => {
       (sum, item) => sum + item.quantity * item.price,
       0
     );
-    navigate("/checkOut", {
-      state: {
-        cart,
-        total,
-        items,
-      },
-    });
+    navigate("/checkOut", { state: { cart, total, items } });
   };
 
-  // Group products by category
-  const productsByCategory = products.reduce((acc, product) => {
-    const cat = product.category || "Other";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(product);
-    return acc;
-  }, {});
+  // Build category list
+  const categorySet = new Set(products.map((p) => p.category || "Other"));
+  const allCategories = ["All", ...Array.from(categorySet)];
 
-  const total = Object.values(cart).reduce(
-    (sum, item) => sum + item.quantity * item.price,
-    0
-  );
+  const visibleProducts =
+    activeCategory === "All"
+      ? products
+      : products.filter((p) => (p.category || "Other") === activeCategory);
 
-  // List of all categories
-  const allCategories = Object.keys(productsByCategory);
+  const cartItems = Object.values(cart);
+  const subtotal = cartItems.reduce((sum, i) => sum + i.quantity * i.price, 0);
+  const delivery = subtotal > 0 ? 40 : 0;
+  const total = subtotal + delivery;
+  const totalQty = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <div className={styles.sideMenu}>
-      <button
-        className={styles.closeBtn}
-        onClick={toggleSideMenu}
-        title="Close"
-      >
-        ×
-      </button>
-      <div className={styles.orderMenuContent}>
-        {/* Desktop: Two columns */}
-        <div className={styles.orderMenuDesktop}>
-          {/* Left: Category List */}
-          <div className={styles.categorySidebar}>
-            <h3>Categories</h3>
-            <div className={styles.categoriesContainer}>
-              {allCategories.map((cat) => (
-                <button
-                  key={cat}
-                  className={`${styles.categoryButton} ${activeCategory === cat ? styles.active : ''}`}
-                  onClick={() => setActiveCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-              {activeCategory && (
-                <button
-                  className={`${styles.categoryButton} ${styles.active}`}
-                  onClick={() => setActiveCategory(null)}
-                >
-                  Show All
-                </button>
-              )}
-            </div>
+    <>
+      {/* Backdrop */}
+      <div className={styles.overlay} onClick={toggleSideMenu} />
+
+      {/* Side Panel */}
+      <div className={styles.panel} role="dialog" aria-modal="true" aria-label="Order Menu">
+
+        {/* Header */}
+        <div className={styles.panelHeader}>
+          <div className={styles.panelTitle}>
+            🍽️ Order Online
+            {totalQty > 0 && (
+              <span className={styles.itemCount}>{totalQty}</span>
+            )}
           </div>
-          {/* Right: Product List */}
-          <div className={styles.productsList}>
-            <h2>Order Menu</h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {loading ? (
-                <li className={styles.loadingText}>Loading...</li>
-              ) : products.length === 0 ? (
-                <li className={styles.emptyMessage}>No products found.</li>
-              ) : (
-                (activeCategory ? [activeCategory] : allCategories).map((cat) => (
-                  <li key={cat} className={styles.categorySection}>
-                    <h3 className={styles.categoryTitle}>{cat}</h3>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                      {productsByCategory[cat].map((product) => (
-                        <li
-                          key={product._id}
-                          className={`${styles.foodItem} ${cart[product._id] ? styles.inCart : ''}`}
-                        >
-                          <img
-                            src={product.image}
-                            alt={product.title}
-                            className={styles.foodItemImage}
-                          />
-                          <div className={styles.foodItemContent}>
-                            <div className={styles.foodItemTitle}>
-                              {product.title}
-                            </div>
-                            <div className={styles.foodItemPrice}>
-                              ₹{product.price}
-                              {product.offer && (
-                                <span className={styles.foodItemOffer}>
-                                  {product.offer}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className={styles.cartControls}>
-                            <button
-                              className={styles.quantityButton}
-                              onClick={() => removeFromCart(product)}
-                              title="Decrease quantity"
-                            >
-                              −
-                            </button>
-                            <span className={styles.quantityDisplay}>
-                              {cart[product._id]?.quantity || 0}
-                            </span>
-                            <button
-                              className={`${styles.quantityButton} ${styles.increase}`}
-                              onClick={() => addToCart(product)}
-                              title="Increase quantity"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))
-              )}
-            </ul>
-          </div>
+          <button className={styles.closeBtn} onClick={toggleSideMenu} aria-label="Close menu">
+            ×
+          </button>
         </div>
-        {/* Mobile: Single column with expandable categories */}
-        <div className={styles.orderMenuMobile}>
-          <h2>Order Menu</h2>
-          {/* Category List (Collapsible) */}
-          <div className={styles.mobileCategoriesSection}>
-            <h3>Categories</h3>
-            <div className={styles.mobileCategoriesList}>
-              {allCategories.map((cat) => (
-                <div key={cat}>
-                  <button
-                    className={`${styles.mobileCategoryButton} ${activeCategory === cat ? styles.active : ''}`}
-                    onClick={() => setActiveCategory(cat === activeCategory ? null : cat)}
+
+        {/* Category Tabs */}
+        {!loading && products.length > 0 && (
+          <div className={styles.categoryTabs}>
+            {allCategories.map((cat) => (
+              <button
+                key={cat}
+                className={`${styles.catTab} ${activeCategory === cat ? styles.active : ""}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Product List */}
+        <div className={styles.productScroll}>
+          {loading ? (
+            <div className={styles.loadingWrap}>
+              <div className={styles.spinner} />
+              <span className={styles.loadingText}>Loading menu…</span>
+            </div>
+          ) : products.length === 0 ? (
+            <div className={styles.emptyCart}>
+              <span className={styles.emptyIcon}>🥘</span>
+              <p className={styles.emptyTitle}>Menu unavailable</p>
+              <p className={styles.emptyText}>Please try again later</p>
+            </div>
+          ) : (
+            <>
+              {activeCategory !== "All" && (
+                <div className={styles.groupHeader}>{activeCategory}</div>
+              )}
+              {visibleProducts.map((product) => {
+                const qty = cart[product._id]?.quantity || 0;
+                return (
+                  <div
+                    key={product._id}
+                    className={`${styles.productRow} ${qty > 0 ? styles.inCart : ""}`}
                   >
-                    <span>{cat}</span>
-                    <span className={`${styles.categoryToggleIcon} ${activeCategory === cat ? styles.active : ''}`}>
-                      ▼
-                    </span>
-                  </button>
-                  {activeCategory === cat && (
-                    <div className={styles.categoryProductsList}>
-                      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                        {productsByCategory[cat].map((product) => (
-                          <li
-                            key={product._id}
-                            className={`${styles.foodItem} ${cart[product._id] ? styles.inCart : ''}`}
-                          >
-                            <img
-                              src={product.image}
-                              alt={product.title}
-                              className={styles.foodItemImage}
-                            />
-                            <div className={styles.foodItemContent}>
-                              <div className={styles.foodItemTitle}>
-                                {product.title}
-                              </div>
-                              <div className={styles.foodItemPrice}>
-                                ₹{product.price}
-                                {product.offer && (
-                                  <span className={styles.foodItemOffer}>
-                                    {product.offer}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <div className={styles.cartControls}>
-                              <button
-                                className={styles.quantityButton}
-                                onClick={() => removeFromCart(product)}
-                                title="Decrease quantity"
-                              >
-                                −
-                              </button>
-                              <span className={styles.quantityDisplay}>
-                                {cart[product._id]?.quantity || 0}
-                              </span>
-                              <button
-                                className={`${styles.quantityButton} ${styles.increase}`}
-                                onClick={() => addToCart(product)}
-                                title="Increase quantity"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className={styles.productThumb}
+                      loading="lazy"
+                    />
+                    <div className={styles.productInfo}>
+                      <div className={styles.productName}>{product.title}</div>
+                      <div className={styles.productMeta}>
+                        <span className={styles.productPrice}>₹{product.price}</span>
+                        {product.offer && (
+                          <span className={styles.offerTag}>{product.offer}</span>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {qty === 0 ? (
+                      <button
+                        className={styles.addItemBtn}
+                        onClick={() => addToCart(product)}
+                      >
+                        + ADD
+                      </button>
+                    ) : (
+                      <div className={styles.qtyGroup}>
+                        <button className={styles.qtyBtn} onClick={() => removeFromCart(product)}>−</button>
+                        <span className={styles.qtyNum}>{qty}</span>
+                        <button className={styles.qtyBtn} onClick={() => addToCart(product)}>+</button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </div>
+
+        {/* Checkout Bar */}
+        <div className={styles.checkoutBar}>
+          {subtotal > 0 && (
+            <div className={styles.orderSummary}>
+              <div className={styles.summaryRow}>
+                <span>Subtotal</span>
+                <span>₹{subtotal.toFixed(2)}</span>
+              </div>
+              <div className={styles.summaryRow}>
+                <span>Delivery fee</span>
+                <span>₹{delivery.toFixed(2)}</span>
+              </div>
+              <div className={styles.summaryRowTotal}>
+                <span>Total</span>
+                <span className={styles.totalValue}>₹{total.toFixed(2)}</span>
+              </div>
             </div>
-          </div>
+          )}
+          <button
+            className={`${styles.checkoutBtn} ${subtotal === 0 ? styles.checkoutBtnDisabled : ""}`}
+            onClick={subtotal > 0 ? handleCheckout : undefined}
+            disabled={subtotal === 0}
+          >
+            {subtotal === 0 ? "Add items to continue" : `Proceed to Checkout • ₹${total.toFixed(2)}`}
+          </button>
         </div>
       </div>
-      <div className={styles.checkoutBar}>
-        <div className={styles.totalAmount}>
-          Total: ₹{total.toFixed(2)}
-        </div>
-        <button
-          className={styles.checkoutBtn}
-          onClick={handleCheckout}
-        >
-          Checkout
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

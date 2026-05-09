@@ -42,14 +42,14 @@ const HeroSection = () => {
         <div className={styles.container}>
           {/* Text Content */}
           <div className={styles.textContent}>
-            <div className={styles.subtitle}>Premium Dining Experience</div>
+            <div className={styles.subtitle}>🔥 Fresh • Fast • Delicious</div>
 
             <h1 className={styles.mainHeading}>
-              Taste Excellence, <strong>Delivered Fresh</strong>
+              Every Bite Tells a<br /><strong>Delicious Story</strong>
             </h1>
 
             <p className={styles.description}>
-              Experience culinary perfection with our carefully crafted menu. Order from our exclusive selection or reserve your table for an unforgettable dining experience. Every dish is prepared with passion and the finest ingredients.
+              Real ingredients. Real flavors. Order your favorites online or book a table — we bring the restaurant experience right to you.
             </p>
 
             {/* Action Buttons */}
@@ -85,15 +85,24 @@ const HeroSection = () => {
             </div>
 
             {/* Trust Badges */}
-            <div style={{ display: "flex", gap: "var(--space-lg)", marginTop: "var(--space-2xl)", flexWrap: "wrap" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)", color: "rgba(255, 255, 255, 0.8)" }}>
-                <span style={{ fontSize: "24px" }}>⭐</span>
-                <span style={{ fontSize: "var(--font-size-sm)" }}>4.8 (500+ Reviews)</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)", color: "rgba(255, 255, 255, 0.8)" }}>
-                <span style={{ fontSize: "24px" }}>🚚</span>
-                <span style={{ fontSize: "var(--font-size-sm)" }}>Fast & Fresh Delivery</span>
-              </div>
+            <div style={{ display: "flex", gap: "12px", marginTop: "32px", flexWrap: "wrap" }}>
+              {[
+                { icon: "⭐", label: "4.8 Rating", sub: "500+ Reviews" },
+                { icon: "🚀", label: "30 min", sub: "Avg delivery" },
+                { icon: "👨‍🍳", label: "20+ Chefs", sub: "Expert kitchen" },
+              ].map((badge) => (
+                <div key={badge.label} style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: "12px", padding: "10px 16px",
+                }}>
+                  <span style={{ fontSize: "22px" }}>{badge.icon}</span>
+                  <div>
+                    <div style={{ color: "#fff", fontSize: "14px", fontWeight: 700, lineHeight: 1.2 }}>{badge.label}</div>
+                    <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "12px" }}>{badge.sub}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
