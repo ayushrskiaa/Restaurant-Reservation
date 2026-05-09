@@ -1,42 +1,73 @@
-// import React from "react";
-import { Link } from "react-router-dom";
-import { HiOutlineArrowRight } from "react-icons/hi";
+import { Link } from "react-scroll";
+import styles from "./About.module.css";
+
+const FEATURES = [
+  { icon: "🌿", label: "Farm Fresh Ingredients" },
+  { icon: "👨‍🍳", label: "Expert Chefs" },
+  { icon: "🚀", label: "30 Min Delivery" },
+  { icon: "⭐", label: "4.8 Star Rated" },
+];
 
 const About = () => {
   return (
-    <>
-      <section className="about" id="about">
-        <div className="container">
-          <div className="banner">
-            <div className="top">
-              <h1 className="heading">ABOUT US</h1>
-              <p>Serving the best food </p>
-            </div>
-            <p className="mid">
-              We welcome you to our cafe, where every visit feels like home. We
-              take pride in serving freshly brewed coffee, handcrafted
-              beverages, and a menu of delicious dishes made with the best
-              ingredients. Our friendly staff and warm ambiance ensure an
-              unforgettable experience, whether you are looking for a quick bite,
-              a relaxing meal, or a place to work and unwind. Join us for a
-              perfect blend of taste, comfort, and community.
-            </p>
-            <Link to={"/"}>
-              Explore Menu{" "}
-              <span>
-                <HiOutlineArrowRight />
-              </span>
-            </Link>
+    <section className={styles.section} id="about">
+      <div className={styles.container}>
+
+        {/* Text */}
+        <div className={styles.textSide}>
+          <span className={styles.eyebrow}>🍴 Our Story</span>
+
+          <h2 className={styles.heading}>
+            More Than a Meal —<br />
+            It's an <span>Experience</span>
+          </h2>
+
+          <p className={styles.body}>
+            Welcome to Rskiaa's, where every visit feels like coming home. We
+            take pride in serving freshly crafted dishes made with the finest
+            local ingredients. Our chefs blend tradition with creativity to
+            deliver flavors that stay with you long after the last bite. Whether
+            it's a quick lunch, a family dinner, or a celebration — we make
+            every moment delicious.
+          </p>
+
+          <div className={styles.features}>
+            {FEATURES.map(f => (
+              <div key={f.label} className={styles.featurePill}>
+                <span className={styles.featureIcon}>{f.icon}</span>
+                {f.label}
+              </div>
+            ))}
           </div>
-          <div className="banner">
+
+          <Link to="menu" spy smooth duration={500} className={styles.cta}>
+            Explore Our Menu →
+          </Link>
+        </div>
+
+        {/* Image */}
+        <div className={styles.imageSide}>
+          <div className={styles.imageFrame}>
             <img
-              src="https://images.pexels.com/photos/12129480/pexels-photo-12129480.jpeg?auto=compress&cs=tinysrgb&w=600"
-              alt="about"
+              src="https://images.pexels.com/photos/12129480/pexels-photo-12129480.jpeg?auto=compress&cs=tinysrgb&w=800"
+              alt="Our kitchen"
+              className={styles.image}
             />
           </div>
+          <div className={styles.imageAccent} />
+
+          {/* Floating card */}
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>🏆</div>
+            <div>
+              <div className={styles.statNumber}>8+ Years</div>
+              <div className={styles.statLabel}>Serving Excellence</div>
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+
+      </div>
+    </section>
   );
 };
 
