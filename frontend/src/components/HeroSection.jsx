@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import OrderMenu from "./orderMenu";
-import { MdOutlineRestaurantMenu, MdOutlineDeliveryDining } from "react-icons/md";
 import { Link } from "react-scroll";
 import { data } from "../restApi.json";
 import styles from "./HeroSection.module.css";
@@ -55,8 +54,7 @@ const HeroSection = () => {
             {/* Action Buttons */}
             <div className={styles.actions}>
               <button className={styles.primaryButton} onClick={toggleSideMenu}>
-                <MdOutlineRestaurantMenu style={{ fontSize: "20px" }} />
-                <span>Order Online</span>
+                🛒 Order Online
               </button>
 
               <Link
@@ -64,11 +62,9 @@ const HeroSection = () => {
                 spy={true}
                 smooth={true}
                 duration={500}
-                className={styles.primaryButton}
-                style={{ cursor: "pointer" }}
+                className={styles.outlineButton}
               >
-                <MdOutlineRestaurantMenu style={{ fontSize: "20px" }} />
-                <span>View Menu</span>
+                📋 View Menu
               </Link>
 
               <Link
@@ -76,11 +72,9 @@ const HeroSection = () => {
                 spy={true}
                 smooth={true}
                 duration={500}
-                className={styles.secondaryButton}
-                style={{ cursor: "pointer" }}
+                className={styles.ghostButton}
               >
-                <MdOutlineDeliveryDining style={{ fontSize: "20px" }} />
-                <span>Reserve Table</span>
+                🪑 Reserve Table
               </Link>
             </div>
 
