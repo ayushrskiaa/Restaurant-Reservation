@@ -1,75 +1,180 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { data } from "../restApi.json";
 import { Link } from "react-scroll";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
-// import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { MdOutlineDeliveryDining, MdOutlineAnalytics } from "react-icons/md"; // Add MdOutlineAnalytics import
+import { MdOutlineDeliveryDining, MdOutlineAnalytics } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 import OrderMenu from "./orderMenu";
 import OrderDetails from "./OrderDetails";
-import { Link as RouterLink } from "react-router-dom"; // Import Link and useNavigate from react-router-dom
+import { Link as RouterLink } from "react-router-dom";
+import styles from "./Navbar.module.css";
 
 const Navbar = () => {
-  const [show, setShow] = useState(false);
-  const [sideMenuOpen, setSideMenuOpen] = useState(false); // State for side menu
-  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false); // State for order details
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Get cart count from localStorage (if you implement cart later)
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      try {
+        const cart = JSON.parse(savedCart);
+        setCartCount(Array.isArray(cart) ? cart.length : 0);
+      } catch (e) {
+        setCartCount(0);
+      }
+    }
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   const toggleSideMenu = () => {
     setSideMenuOpen(!sideMenuOpen);
-    // Close order details if open
     if (orderDetailsOpen) setOrderDetailsOpen(false);
   };
 
   const toggleOrderDetails = () => {
     setOrderDetailsOpen(!orderDetailsOpen);
-    // Close side menu if open
     if (sideMenuOpen) setSideMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
     <>
-      <nav>
-        <div className="logo">RSKIAA'S CAFE</div>
+      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+        <div className={styles.navContainer}>
+          {/* Logo */}
+          <div className={styles.logo}>
+            <div className={styles.logoIcon}>🍽️</div>
+            <a href="/" className={styles.logoText}>
+              RSKIAA'S
+            </a>
+          </div>
 
-        {/* <button
-          className="menuBtn"
-          style={{ border: "2px solid black" }}
-          onClick={toggleSideMenu}
-        >
-          <MdOutlineRestaurantMenu style={{ fontSize: "20px", marginRight: "5px" }} />
-          DINE IN
-        </button> */}
-        <div className={show ? "navLinks showmenu" : "navLinks"}>
-          <div className="links">
-            {data[0].navbarLinks.map((element) => (
+          {/* Desktop Nav Links */}
+          <div className={styles.links}>
+            {data[0]?.navbarLinks?.map((element) => (
               <Link
+                key={element.id}
                 to={element.link}
                 spy={true}
                 smooth={true}
                 duration={500}
-                key={element.id}
+                className={styles.navLink}
               >
                 {element.title}
               </Link>
             ))}
           </div>
 
-          <button className="menuBtn" onClick={toggleSideMenu}>
-            <MdOutlineDeliveryDining style={{ fontSize: "20px", marginRight: "5px" }} />
-            ORDER ONLINE
-          </button>
+          {/* Desktop Actions */}
+          <div className={styles.navActions}>
+            <button
+              className={styles.actionButton}
+              onClick={toggleSideMenu}
+              title="Order Online"
+            >
+              <MdOutlineDeliveryDining style={{ fontSize: "18px" }} />
+              <span>Order</span>
+            </button>
 
-          <button className="menuBtn" onClick={toggleOrderDetails}>
-            <HiOutlineShoppingCart style={{ fontSize: "20px", marginRight: "5px" }} />
-            ORDERS
+            <button
+              className={`${styles.actionButton} ${styles.cartButton}`}
+              onClick={toggleOrderDetails}
+              title="View Orders"
+            >
+              <HiOutlineShoppingCart style={{ fontSize: "18px" }} />
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <div className={styles.cartBadge}>{cartCount}</div>
+              )}
+            </button>
+
+            <RouterLink
+              to="/restaurant-dashboard"
+              className={styles.ctaButton}
+              title="Analytics Dashboard"
+            >
+              <MdOutlineAnalytics style={{ fontSize: "18px" }} />
+              <span>Dashboard</span>
+            </RouterLink>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            className={`${styles.hamburger} ${mobileMenuOpen ? styles.active : ""}`}
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
-          <RouterLink to="/restaurant-dashboard" className="menuBtn" style={{ textDecoration: "none" }}>
-            <MdOutlineAnalytics style={{ fontSize: "20px", marginRight: "5px" }} />
-            VISIT ANALYTICS DASHBOARD
-          </RouterLink>
         </div>
-        <div className="hamburger" onClick={() => setShow(!show)}>
-          <GiHamburgerMenu />
+
+        {/* Mobile Menu */}
+        <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.active : ""}`}>
+          <div className={styles.links} style={{ flexDirection: "column" }}>
+            {data[0]?.navbarLinks?.map((element) => (
+              <Link
+                key={element.id}
+                to={element.link}
+                spy={true}
+                smooth={true}
+                duration={500}
+                className={styles.navLink}
+                onClick={closeMobileMenu}
+              >
+                {element.title}
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <button
+              className={styles.actionButton}
+              onClick={toggleSideMenu}
+              style={{ width: "100%" }}
+            >
+              <MdOutlineDeliveryDining style={{ fontSize: "18px" }} />
+              <span>Order Online</span>
+            </button>
+
+            <button
+              className={styles.actionButton}
+              onClick={toggleOrderDetails}
+              style={{ width: "100%" }}
+            >
+              <HiOutlineShoppingCart style={{ fontSize: "18px" }} />
+              <span>View Cart {cartCount > 0 && `(${cartCount})`}</span>
+            </button>
+
+            <RouterLink
+              to="/restaurant-dashboard"
+              className={styles.ctaButton}
+              style={{ width: "100%", justifyContent: "center" }}
+            >
+              <MdOutlineAnalytics style={{ fontSize: "18px" }} />
+              <span>Dashboard</span>
+            </RouterLink>
+          </div>
         </div>
       </nav>
 
