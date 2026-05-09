@@ -1,36 +1,34 @@
 import styles from "./WhoAreWe.module.css";
 
 const STATS = [
-  { id: 1, number: "14", label: "Restaurants", icon: "🏪" },
-  { id: 2, number: "20", label: "Expert Chefs", icon: "👨‍🍳" },
-  { id: 3, number: "8",  label: "Years of Excellence", icon: "🏆" },
-  { id: 4, number: "200", label: "Menu Items", icon: "🍽️" },
+  { id: 1, num: "14", label: "Restaurants" },
+  { id: 2, num: "20", label: "Expert Chefs" },
+  { id: 3, num: "8",  label: "Years of Excellence" },
+  { id: 4, num: "200", label: "Menu Items" },
 ];
 
-const WhoAreWe = () => {
-  return (
-    <section className={styles.section}>
-      <div className={styles.inner}>
-        <span className={styles.eyebrow}>📊 By The Numbers</span>
-
-        <h2 className={styles.heading}>
-          Trusted by Thousands of<br /><span>Happy Customers</span>
-        </h2>
-
-        <div className={styles.statsGrid}>
-          {STATS.map(stat => (
-            <div key={stat.id} className={styles.statItem}>
-              <span className={styles.statIcon}>{stat.icon}</span>
-              <span className={styles.statNumber}>
-                {stat.number}<span className={styles.statPlus}>+</span>
-              </span>
-              <span className={styles.statLabel}>{stat.label}</span>
-            </div>
-          ))}
+const WhoAreWe = () => (
+  <section className={styles.section}>
+    <div className={styles.inner}>
+      <div className={styles.textBlock}>
+        <div className={styles.sectionLabel}>
+          <span className={styles.labelDash} /> By The Numbers
         </div>
+        <h2 className={styles.heading}>
+          Trusted by thousands<br />of happy customers
+        </h2>
       </div>
-    </section>
-  );
-};
+
+      <div className={styles.divider} />
+
+      {STATS.map(s => (
+        <div key={s.id} className={styles.statItem}>
+          <span className={styles.statNum}>{s.num}<span>+</span></span>
+          <span className={styles.statLabel}>{s.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
 export default WhoAreWe;

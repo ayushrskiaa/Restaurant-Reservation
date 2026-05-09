@@ -1,51 +1,51 @@
+import { Leaf, Flame, Timer } from "lucide-react";
 import styles from "./Qualities.module.css";
 
 const QUALITIES = [
   {
     id: 1,
-    icon: "🌿",
+    Icon: Leaf,
     title: "Farm-Fresh Ingredients",
-    desc: "Every dish starts with quality. We source locally grown, seasonal produce and premium proteins — no shortcuts, no compromise.",
+    desc: "Every dish starts with quality. We source locally grown, seasonal produce and premium proteins — no shortcuts, ever.",
   },
   {
     id: 2,
-    icon: "🔥",
+    Icon: Flame,
     title: "Bold, Authentic Flavors",
-    desc: "Our recipes balance tradition with innovation. Every bite delivers the depth of authentic cooking with a modern, creative twist.",
+    desc: "Our recipes balance tradition with innovation. Every bite delivers the depth of authentic cooking with a modern twist.",
   },
   {
     id: 3,
-    icon: "⚡",
+    Icon: Timer,
     title: "Fast & Fresh Delivery",
-    desc: "Hot food at your door in under 30 minutes. Our delivery network keeps your meal at the perfect temperature from kitchen to plate.",
+    desc: "Hot food at your door in under 30 minutes. Our delivery network keeps your meal at the perfect temperature.",
   },
 ];
 
-const Qualities = () => {
-  return (
-    <section className={styles.section} id="qualities">
-      <div className={styles.inner}>
-        <div className={styles.sectionHeader}>
-          <div className={styles.eyebrow}>✨ Why Choose Us</div>
-          <h2 className={styles.title}>What Makes Us Different</h2>
-          <p className={styles.subtitle}>
-            We don't just serve food — we craft experiences built on quality, flavor, and care.
-          </p>
+const Qualities = () => (
+  <section className={styles.section} id="qualities">
+    <div className={styles.inner}>
+      <div className={styles.header}>
+        <div className={styles.sectionLabel}>
+          <span className={styles.labelDash} /> Why Choose Us
         </div>
-
-        <div className={styles.grid}>
-          {QUALITIES.map(q => (
-            <div key={q.id} className={styles.card}>
-              <div className={styles.iconWrap}>{q.icon}</div>
-              <h3 className={styles.cardTitle}>{q.title}</h3>
-              <p className={styles.cardDesc}>{q.desc}</p>
-              <span className={styles.cardLink}>Learn more →</span>
-            </div>
-          ))}
-        </div>
+        <h2 className={styles.heading}>What Makes Us Different</h2>
+        <p className={styles.subheading}>
+          We don't just serve food — we craft experiences built on quality, flavor, and care.
+        </p>
       </div>
-    </section>
-  );
-};
+
+      <div className={styles.grid}>
+        {QUALITIES.map(({ id, Icon, title, desc }) => (
+          <div key={id} className={styles.card}>
+            <div className={styles.iconBox}><Icon size={20} strokeWidth={1.75} /></div>
+            <h3 className={styles.cardTitle}>{title}</h3>
+            <p className={styles.cardDesc}>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
 export default Qualities;

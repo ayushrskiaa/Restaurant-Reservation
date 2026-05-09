@@ -1,42 +1,21 @@
-/* ============================================================================
-   FOOTER
-   ============================================================================ */
+/* FOOTER */
 
 .footer {
-  background: #0f0500;
-  padding: 72px 32px 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.footer::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  left: -5%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(232,93,4,0.12) 0%, transparent 65%);
-  pointer-events: none;
+  background: #0f0f0f;
+  border-top: 1px solid rgba(255,255,255,0.06);
 }
 
 .top {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
+  padding: 72px 32px 64px;
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: 48px;
-  padding-bottom: 56px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* ============================================================ BRAND COL */
-
-.brandCol {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+/* Brand */
+.brandCol { display: flex; flex-direction: column; gap: 18px; }
 
 .logoRow {
   display: flex;
@@ -44,54 +23,49 @@
   gap: 10px;
 }
 
-.logoIcon {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, #e85d04, #f97316);
-  border-radius: 12px;
+.logoMark {
+  width: 32px;
+  height: 32px;
+  background: #e85d04;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  color: #fff;
 }
 
 .logoName {
-  font-size: 20px;
-  font-weight: 900;
+  font-size: 16px;
+  font-weight: 800;
   color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.logoName span {
-  color: #f97316;
+  letter-spacing: -0.3px;
 }
 
 .tagline {
-  font-size: 14px;
-  color: rgba(255,255,255,0.5);
-  line-height: 1.7;
-  max-width: 260px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.75;
+  max-width: 240px;
 }
 
-.socialRow {
+.socials {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .socialBtn {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.6);
-  font-size: 16px;
+  color: rgba(255,255,255,0.45);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 150ms ease;
   text-decoration: none;
+  transition: all 150ms ease;
 }
 
 .socialBtn:hover {
@@ -100,76 +74,77 @@
   color: #fff;
 }
 
-/* ============================================================ LINK COLS */
-
-.col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+/* Columns */
+.col { display: flex; flex-direction: column; gap: 14px; }
 
 .colTitle {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.3);
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  margin-bottom: 4px;
 }
 
-.colLink {
+.link {
   font-size: 14px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.55);
   text-decoration: none;
   cursor: pointer;
   transition: color 150ms;
+  font-weight: 400;
   line-height: 1;
 }
 
-.colLink:hover {
-  color: #f97316;
-}
+.link:hover { color: #fff; }
 
-.hoursItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.hoursGroup { display: flex; flex-direction: column; gap: 14px; }
 
-.day {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-}
+.hoursRow { display: flex; flex-direction: column; gap: 2px; }
 
-.time {
-  font-size: 14px;
-  color: rgba(255,255,255,0.75);
+.hoursDay {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.contactItem {
+.hoursTime {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+}
+
+.contactGroup { display: flex; flex-direction: column; gap: 14px; }
+
+.contactRow {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
 }
 
 .contactIcon {
-  font-size: 14px;
-  margin-top: 1px;
+  color: #e85d04;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .contactText {
   font-size: 13px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.5);
   line-height: 1.5;
 }
 
-/* ============================================================ BOTTOM BAR */
-
+/* Bottom bar */
 .bottom {
-  max-width: 1200px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.bottomInner {
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -178,44 +153,38 @@
 
 .copyright {
   font-size: 13px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.25);
 }
 
-.copyright span {
-  color: #f97316;
-}
-
-.dashboardLink {
+.dashLink {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
-  background: rgba(232,93,4,0.15);
-  border: 1px solid rgba(232,93,4,0.3);
-  color: #f97316;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 7px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.45);
+  font-size: 12px;
   font-weight: 600;
   text-decoration: none;
+  letter-spacing: 0.2px;
   transition: all 150ms ease;
 }
 
-.dashboardLink:hover {
-  background: #e85d04;
-  color: #fff;
-  border-color: #e85d04;
+.dashLink:hover {
+  background: rgba(232,93,4,0.12);
+  border-color: rgba(232,93,4,0.3);
+  color: #e85d04;
 }
-
-/* ============================================================ RESPONSIVE */
 
 @media (max-width: 1024px) {
   .top { grid-template-columns: 1fr 1fr; gap: 36px; }
 }
 
-@media (max-width: 640px) {
-  .footer { padding: 56px 20px 0; }
-  .top { grid-template-columns: 1fr 1fr; gap: 28px; padding-bottom: 40px; }
-  .bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+@media (max-width: 600px) {
+  .top { padding: 56px 20px 48px; gap: 28px; }
+  .bottomInner { padding: 18px 20px; flex-direction: column; align-items: flex-start; }
 }
 
 @media (max-width: 400px) {

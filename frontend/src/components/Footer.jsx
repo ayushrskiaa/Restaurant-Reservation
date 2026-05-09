@@ -1,8 +1,9 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Link } from "react-scroll";
+import { MapPin, Phone, Mail, LayoutDashboard, Utensils, Instagram, Twitter, Facebook } from "lucide-react";
 import styles from "./Footer.module.css";
 
-const NAV_LINKS = [
+const NAV = [
   { label: "Home", to: "heroSection" },
   { label: "About Us", to: "about" },
   { label: "Services", to: "qualities" },
@@ -16,84 +17,73 @@ const HOURS = [
   { day: "Sunday", time: "05:00 PM – 11:00 PM" },
 ];
 
-const Footer = () => {
-  return (
-    <footer className={styles.footer}>
-      <div className={styles.top}>
-
-        {/* Brand */}
-        <div className={styles.brandCol}>
-          <div className={styles.logoRow}>
-            <div className={styles.logoIcon}>🍽️</div>
-            <span className={styles.logoName}>RSKIAA<span>'S</span></span>
-          </div>
-          <p className={styles.tagline}>
-            Handcrafted flavors, warm hospitality, and unforgettable dining moments — every single day.
-          </p>
-          <div className={styles.socialRow}>
-            {["📘", "📸", "🐦", "▶️"].map((icon, i) => (
-              <a key={i} href="#" className={styles.socialBtn} aria-label="Social link">
-                {icon}
-              </a>
-            ))}
-          </div>
+const Footer = () => (
+  <footer className={styles.footer}>
+    <div className={styles.top}>
+      <div className={styles.brandCol}>
+        <div className={styles.logoRow}>
+          <div className={styles.logoMark}><Utensils size={14} /></div>
+          <span className={styles.logoName}>Rskiaa's</span>
         </div>
-
-        {/* Quick Links */}
-        <div className={styles.col}>
-          <span className={styles.colTitle}>Quick Links</span>
-          {NAV_LINKS.map(link => (
-            <Link
-              key={link.label}
-              to={link.to}
-              spy smooth duration={500}
-              className={styles.colLink}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <p className={styles.tagline}>
+          Handcrafted flavors and warm hospitality — every single day.
+        </p>
+        <div className={styles.socials}>
+          <a href="#" className={styles.socialBtn} aria-label="Instagram"><Instagram size={14} /></a>
+          <a href="#" className={styles.socialBtn} aria-label="Twitter"><Twitter size={14} /></a>
+          <a href="#" className={styles.socialBtn} aria-label="Facebook"><Facebook size={14} /></a>
         </div>
+      </div>
 
-        {/* Hours */}
-        <div className={styles.col}>
-          <span className={styles.colTitle}>Opening Hours</span>
+      <div className={styles.col}>
+        <span className={styles.colTitle}>Quick Links</span>
+        {NAV.map(l => (
+          <Link key={l.label} to={l.to} spy smooth duration={500} className={styles.link}>
+            {l.label}
+          </Link>
+        ))}
+      </div>
+
+      <div className={styles.col}>
+        <span className={styles.colTitle}>Opening Hours</span>
+        <div className={styles.hoursGroup}>
           {HOURS.map(h => (
-            <div key={h.day} className={styles.hoursItem}>
-              <span className={styles.day}>{h.day}</span>
-              <span className={styles.time}>{h.time}</span>
+            <div key={h.day} className={styles.hoursRow}>
+              <span className={styles.hoursDay}>{h.day}</span>
+              <span className={styles.hoursTime}>{h.time}</span>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Contact */}
-        <div className={styles.col}>
-          <span className={styles.colTitle}>Contact</span>
-          <div className={styles.contactItem}>
-            <span className={styles.contactIcon}>📍</span>
+      <div className={styles.col}>
+        <span className={styles.colTitle}>Contact</span>
+        <div className={styles.contactGroup}>
+          <div className={styles.contactRow}>
+            <MapPin size={13} className={styles.contactIcon} />
             <span className={styles.contactText}>123 Flavor Street, Food City, FC 110001</span>
           </div>
-          <div className={styles.contactItem}>
-            <span className={styles.contactIcon}>📞</span>
+          <div className={styles.contactRow}>
+            <Phone size={13} className={styles.contactIcon} />
             <span className={styles.contactText}>+91 1234567890</span>
           </div>
-          <div className={styles.contactItem}>
-            <span className={styles.contactIcon}>✉️</span>
+          <div className={styles.contactRow}>
+            <Mail size={13} className={styles.contactIcon} />
             <span className={styles.contactText}>hello@rskiaas.com</span>
           </div>
         </div>
-
       </div>
+    </div>
 
-      <div className={styles.bottom}>
-        <span className={styles.copyright}>
-          © 2025 <span>Rskiaa's</span>. All rights reserved.
-        </span>
-        <RouterLink to="/restaurant-dashboard" className={styles.dashboardLink}>
-          📊 Restaurant Dashboard
+    <div className={styles.bottom}>
+      <div className={styles.bottomInner}>
+        <span className={styles.copyright}>© 2025 Rskiaa's. All rights reserved.</span>
+        <RouterLink to="/restaurant-dashboard" className={styles.dashLink}>
+          <LayoutDashboard size={13} /> Restaurant Dashboard
         </RouterLink>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);
 
 export default Footer;

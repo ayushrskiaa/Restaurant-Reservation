@@ -1,129 +1,101 @@
 import { useState, useEffect } from "react";
 import { data } from "../restApi.json";
 import { Link } from "react-scroll";
-import { HiOutlineShoppingCart } from "react-icons/hi";
-import { MdOutlineDeliveryDining, MdOutlineAnalytics } from "react-icons/md";
+import { Link as RouterLink } from "react-router-dom";
+import { ShoppingBag, LayoutDashboard, Menu, X, Utensils } from "lucide-react";
 import OrderMenu from "./orderMenu";
 import OrderDetails from "./OrderDetails";
-import { Link as RouterLink } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("cart");
       if (saved) {
-        const cart = JSON.parse(saved);
-        setCartCount(Array.isArray(cart) ? cart.length : 0);
+        const c = JSON.parse(saved);
+        setCartCount(Array.isArray(c) ? c.length : 0);
       }
     } catch { setCartCount(0); }
   }, []);
 
-  const toggleSideMenu = () => {
-    setSideMenuOpen(v => !v);
-    if (orderDetailsOpen) setOrderDetailsOpen(false);
-  };
-
-  const toggleOrderDetails = () => {
-    setOrderDetailsOpen(v => !v);
-    if (sideMenuOpen) setSideMenuOpen(false);
-  };
+  const openSideMenu = () => { setSideMenuOpen(true); setOrderDetailsOpen(false); setMobileOpen(false); };
+  const openOrderDetails = () => { setOrderDetailsOpen(true); setSideMenuOpen(false); setMobileOpen(false); };
 
   return (
     <>
       <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
         <div className={styles.navContainer}>
-
-          {/* Logo */}
           <RouterLink to="/" className={styles.logo}>
-            <div className={styles.logoIcon}>🍽️</div>
-            <span className={styles.logoText}>RSKIAA<span>'S</span></span>
+            <div className={styles.logoMark}><Utensils size={16} /></div>
+            <span className={styles.logoText}>Rskiaa's</span>
           </RouterLink>
 
-          {/* Desktop nav links */}
           <div className={styles.links}>
             {data[0]?.navbarLinks?.map(el => (
-              <Link
-                key={el.id}
-                to={el.link}
-                spy smooth duration={500}
-                className={styles.navLink}
-              >
+              <Link key={el.id} to={el.link} spy smooth duration={500} className={styles.navLink}>
                 {el.title}
               </Link>
             ))}
           </div>
 
-          {/* Desktop actions */}
           <div className={styles.navActions}>
-            <button className={styles.actionButton} onClick={toggleSideMenu}>
-              <MdOutlineDeliveryDining size={17} />
-              Order
+            <button className={styles.iconBtn} onClick={openSideMenu}>
+              <Utensils size={14} /> Order
             </button>
-
-            <button className={`${styles.actionButton} ${styles.cartButton}`} onClick={toggleOrderDetails}>
-              <HiOutlineShoppingCart size={17} />
-              Cart
+            <button className={`${styles.iconBtn} ${styles.cartButton}`} onClick={openOrderDetails} style={{ position: "relative" }}>
+              <ShoppingBag size={14} /> Cart
               {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
             </button>
-
-            <RouterLink to="/restaurant-dashboard" className={styles.ctaButton}>
-              <MdOutlineAnalytics size={17} />
-              Dashboard
+            <RouterLink to="/restaurant-dashboard" className={styles.ctaBtn}>
+              <LayoutDashboard size={14} /> Dashboard
             </RouterLink>
           </div>
 
-          {/* Hamburger */}
           <button
-            className={`${styles.hamburger} ${mobileMenuOpen ? styles.active : ""}`}
-            onClick={() => setMobileMenuOpen(v => !v)}
+            className={`${styles.hamburger} ${mobileOpen ? styles.active : ""}`}
+            onClick={() => setMobileOpen(v => !v)}
             aria-label="Toggle menu"
           >
             <span /><span /><span />
           </button>
         </div>
 
-        {/* Mobile menu */}
-        <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.active : ""}`}>
+        <div className={`${styles.mobileMenu} ${mobileOpen ? styles.active : ""}`}>
           {data[0]?.navbarLinks?.map(el => (
-            <Link
-              key={el.id}
-              to={el.link}
-              spy smooth duration={500}
-              className={styles.navLink}
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link key={el.id} to={el.link} spy smooth duration={500}
+              className={styles.navLink} onClick={() => setMobileOpen(false)}>
               {el.title}
             </Link>
           ))}
-          <div className={styles.mobileActionsGroup}>
-            <button className={styles.actionButton} onClick={toggleSideMenu} style={{ width: "100%", justifyContent: "center" }}>
-              <MdOutlineDeliveryDining size={17} /> Order Online
+          <div className={styles.mobileDivider} />
+          <div className={styles.mobileActions}>
+            <button className={styles.iconBtn} onClick={openSideMenu} style={{ width: "100%", justifyContent: "center" }}>
+              <Utensils size={14} /> Order Online
             </button>
-            <button className={styles.actionButton} onClick={toggleOrderDetails} style={{ width: "100%", justifyContent: "center" }}>
-              <HiOutlineShoppingCart size={17} /> Cart {cartCount > 0 && `(${cartCount})`}
+            <button className={styles.iconBtn} onClick={openOrderDetails} style={{ width: "100%", justifyContent: "center" }}>
+              <ShoppingBag size={14} /> Cart {cartCount > 0 && `(${cartCount})`}
             </button>
-            <RouterLink to="/restaurant-dashboard" className={styles.ctaButton} style={{ justifyContent: "center" }}>
-              <MdOutlineAnalytics size={17} /> Dashboard
+            <RouterLink to="/restaurant-dashboard" className={styles.ctaBtn} style={{ justifyContent: "center" }}>
+              <LayoutDashboard size={14} /> Dashboard
             </RouterLink>
           </div>
         </div>
       </nav>
 
-      {sideMenuOpen && <OrderMenu toggleSideMenu={toggleSideMenu} />}
-      {orderDetailsOpen && <OrderDetails toggleOrderDetails={toggleOrderDetails} />}
+      {sideMenuOpen && <OrderMenu toggleSideMenu={() => setSideMenuOpen(false)} />}
+      {orderDetailsOpen && <OrderDetails toggleOrderDetails={() => setOrderDetailsOpen(false)} />}
     </>
   );
 };

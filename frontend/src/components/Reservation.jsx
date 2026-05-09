@@ -1,135 +1,83 @@
 import { useState } from "react";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight, Phone, CalendarDays } from "lucide-react";
 import styles from "./Reservation.module.css";
 
 const Reservation = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [phone, setPhone] = useState("");
+  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", date: "", time: "" });
   const navigate = useNavigate();
 
-  const BASE_URL =
-    window.location.hostname === "localhost"
-      ? import.meta.env.VITE_BASE_URL
-      : import.meta.env.VITE_PRODUCTION_URL;
+  const BASE_URL = window.location.hostname === "localhost"
+    ? import.meta.env.VITE_BASE_URL
+    : import.meta.env.VITE_PRODUCTION_URL;
 
-  const handleReservation = async (e) => {
+  const set = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
         `${BASE_URL}/api/v1/reservation`,
-        { firstName, lastName, email, phone, date, time },
+        form,
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
       toast.success(data.message);
-      setFirstName(""); setLastName(""); setPhone("");
-      setEmail(""); setTime(""); setDate("");
+      setForm({ firstName: "", lastName: "", email: "", phone: "", date: "", time: "" });
       navigate("/success");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong!");
     }
   };
 
   return (
     <section className={styles.section} id="reservation">
       <div className={styles.inner}>
-
-        {/* Image Side */}
         <div className={styles.imageSide}>
           <div className={styles.imageFrame}>
             <img src="/reservation.png" alt="Reserve a table" className={styles.image} />
           </div>
-          <div className={styles.imageTag}>
-            <div className={styles.tagIcon}>🎉</div>
+          <div className={styles.imageCaption}>
+            <div className={styles.captionIcon}><CalendarDays size={18} /></div>
             <div>
-              <div className={styles.tagText}>Private Events</div>
-              <div className={styles.tagSub}>Birthdays, Anniversaries & More</div>
+              <div className={styles.captionTitle}>Private Events</div>
+              <div className={styles.captionSub}>Birthdays & Anniversaries</div>
             </div>
           </div>
         </div>
 
-        {/* Form Side */}
         <div className={styles.formSide}>
           <div className={styles.formHeader}>
-            <span className={styles.eyebrow}>📅 Reservations</span>
-            <h2 className={styles.formTitle}>
-              Book Your Table,<br /><span>Create Memories</span>
-            </h2>
-            <div className={styles.phoneRow}>
-              <span className={styles.phoneIcon}>📞</span>
-              <span>Need help? Call us at</span>
-              <span className={styles.phoneNumber}>+91 1234567890</span>
+            <div className={styles.sectionLabel}>
+              <span className={styles.labelDash} /> Reservations
+            </div>
+            <h2 className={styles.heading}>Book Your Table,<br />Create Memories</h2>
+            <div className={styles.contactLine}>
+              <Phone size={14} />
+              Need help? Call us at
+              <span className={styles.phone}>+91 1234567890</span>
             </div>
           </div>
 
-          <form className={styles.form} onSubmit={handleReservation}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.row}>
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
-                required
-              />
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={e => setLastName(e.target.value)}
-                required
-              />
+              <input className={styles.input} type="text" placeholder="First Name" value={form.firstName} onChange={set("firstName")} required />
+              <input className={styles.input} type="text" placeholder="Last Name" value={form.lastName} onChange={set("lastName")} required />
             </div>
-
             <div className={styles.row}>
-              <input
-                className={styles.input}
-                type="date"
-                value={date}
-                onChange={e => setDate(e.target.value)}
-                required
-              />
-              <input
-                className={styles.input}
-                type="time"
-                value={time}
-                onChange={e => setTime(e.target.value)}
-                required
-              />
+              <input className={styles.input} type="date" value={form.date} onChange={set("date")} required />
+              <input className={styles.input} type="time" value={form.time} onChange={set("time")} required />
             </div>
-
             <div className={styles.row}>
-              <input
-                className={styles.input}
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-              <input
-                className={styles.input}
-                type="tel"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                required
-              />
+              <input className={styles.input} type="email" placeholder="Email Address" value={form.email} onChange={set("email")} required />
+              <input className={styles.input} type="tel" placeholder="Phone Number" value={form.phone} onChange={set("phone")} required />
             </div>
-
             <button type="submit" className={styles.submitBtn}>
-              Reserve My Table <HiOutlineArrowNarrowRight size={20} />
+              Reserve My Table <ArrowRight size={16} />
             </button>
           </form>
         </div>
-
       </div>
     </section>
   );

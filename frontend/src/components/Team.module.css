@@ -1,144 +1,118 @@
-/* ============================================================================
-   TEAM SECTION
-   ============================================================================ */
+/* TEAM */
 
 .section {
-  background: #fff;
-  padding: 96px 32px;
+  background: #f9f9f9;
+  padding: 112px 32px;
 }
 
 .inner {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
-.sectionHeader {
-  text-align: center;
+.header {
+  max-width: 480px;
   margin-bottom: 56px;
-  max-width: 560px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.eyebrow {
-  display: inline-flex;
+.sectionLabel {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  background: #fff7f0;
+  gap: 8px;
   color: #e85d04;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  padding: 6px 16px;
-  border-radius: 999px;
   margin-bottom: 14px;
-  border: 1px solid rgba(232,93,4,0.2);
 }
 
-.title {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+.labelDash { width: 20px; height: 1.5px; background: #e85d04; }
+
+.heading {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 800;
-  color: #111827;
-  margin-bottom: 12px;
+  color: #0f0f0f;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+  margin-bottom: 10px;
 }
 
-.subtitle {
+.subheading {
   font-size: 15px;
   color: #6b7280;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
-/* ============================================================ CARDS */
-
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
 .card {
   background: #fff;
-  border: 1px solid #f3f4f6;
-  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
   overflow: hidden;
-  text-align: center;
-  transition: transform 250ms ease, box-shadow 250ms ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  transition: box-shadow 200ms, transform 200ms;
 }
 
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 48px rgba(232,93,4,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
 }
 
 .imageWrap {
-  position: relative;
-  height: 240px;
+  height: 260px;
   overflow: hidden;
-  background: #f9fafb;
+  background: #f5f5f5;
 }
 
-.cardImage {
+.cardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 400ms ease;
+  object-position: top;
+  transition: transform 350ms ease;
 }
 
-.card:hover .cardImage {
-  transform: scale(1.05);
-}
-
-.imageOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(232,93,4,0.5) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 300ms ease;
-}
-
-.card:hover .imageOverlay {
-  opacity: 1;
-}
+.card:hover .cardImg { transform: scale(1.04); }
 
 .cardBody {
-  padding: 20px 18px 24px;
+  padding: 18px 20px 20px;
+  border-top: 1px solid #f5f5f5;
 }
 
 .cardName {
-  font-size: 16px;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f0f0f;
+  letter-spacing: -0.3px;
+  margin-bottom: 3px;
 }
 
 .cardRole {
-  font-size: 13px;
-  color: #e85d04;
-  font-weight: 600;
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.divider {
-  width: 32px;
-  height: 3px;
-  background: linear-gradient(90deg, #e85d04, #f97316);
-  border-radius: 4px;
-  margin: 10px auto 0;
+.cardAccent {
+  width: 24px;
+  height: 2px;
+  background: #e85d04;
+  border-radius: 2px;
+  margin-top: 10px;
 }
 
-/* ============================================================ RESPONSIVE */
-
-@media (max-width: 1024px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-}
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
 @media (max-width: 600px) {
-  .section { padding: 64px 20px; }
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .imageWrap { height: 180px; }
-}
-
-@media (max-width: 400px) {
-  .grid { grid-template-columns: 1fr; }
+  .section { padding: 72px 20px; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .imageWrap { height: 200px; }
 }

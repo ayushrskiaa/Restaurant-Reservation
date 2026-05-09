@@ -1,554 +1,212 @@
-/* ============================================================================
-   HERO SECTION COMPONENT - MODERN LANDING
-   ============================================================================ */
+/* HERO SECTION */
 
 .heroSection {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #1c0a00 100%);
+  background: #0f0f0f;
   position: relative;
   overflow: hidden;
-}
-
-/* ============================================================================
-   BACKGROUND DECORATIONS
-   ============================================================================ */
-
-.heroBackground {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.backgroundGradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(26, 10, 0, 0.97) 0%,
-    rgba(61, 26, 0, 0.93) 50%,
-    rgba(28, 10, 0, 0.97) 100%
-  );
-}
-
-.backgroundPattern {
-  position: absolute;
-  inset: 0;
-  opacity: 0.2;
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(232, 93, 4, 0.4) 0%, transparent 55%),
-    radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 60% 80%, rgba(232, 93, 4, 0.2) 0%, transparent 45%);
-}
-
-.floatingShapes {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.shape {
-  position: absolute;
-  opacity: 0.1;
-  animation: float var(--transition-slow) ease-in-out infinite;
-}
-
-.shape1 {
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 107, 107, 0.3);
-  border-radius: 50%;
-  top: -100px;
-  right: -100px;
-  animation-delay: 0s;
-}
-
-.shape2 {
-  width: 200px;
-  height: 200px;
-  background: rgba(255, 107, 107, 0.3);
-  border-radius: 50%;
-  bottom: -50px;
-  left: 10%;
-  animation-delay: 2s;
-}
-
-.shape3 {
-  width: 150px;
-  height: 150px;
-  background: rgba(255, 107, 107, 0.3);
-  border-radius: 50%;
-  top: 20%;
-  left: 5%;
-  animation-delay: 4s;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(30px);
-  }
-}
-
-/* ============================================================================
-   HERO CONTENT
-   ============================================================================ */
-
-.content {
-  flex: 1;
+  min-height: calc(100vh - 64px);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2xl) var(--space-lg);
-  position: relative;
-  z-index: 2;
+  flex-direction: column;
 }
 
-.container {
-  max-width: 1280px;
+.heroInner {
+  flex: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3xl);
+  gap: 64px;
   align-items: center;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
-/* ============================================================================
-   TEXT CONTENT
-   ============================================================================ */
-
-.textContent {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.subtitle {
+/* Text */
+.label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(232, 93, 4, 0.18);
-  border: 1px solid rgba(232, 93, 4, 0.35);
-  color: #f97316;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  gap: 6px;
+  color: #e85d04;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  animation: slideInUp 0.8s ease-out;
-  width: fit-content;
+  margin-bottom: 20px;
 }
 
-.mainHeading {
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-white);
+.labelLine {
+  width: 24px;
+  height: 1.5px;
+  background: #e85d04;
+}
+
+.heading {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  color: #fff;
   line-height: 1.1;
-  animation: slideInUp 0.8s ease-out 0.1s both;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
 }
 
-.mainHeading strong {
-  background: linear-gradient(135deg, #f97316, #e85d04);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.heading em {
+  font-style: normal;
+  color: #e85d04;
 }
 
 .description {
-  font-size: var(--font-size-lg);
-  color: rgba(255, 255, 255, 0.85);
-  line-height: var(--line-height-relaxed);
-  max-width: 500px;
-  animation: slideInUp 0.8s ease-out 0.2s both;
+  font-size: 16px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.75;
+  max-width: 440px;
+  margin-bottom: 36px;
 }
 
-/* ============================================================================
-   BUTTONS
-   ============================================================================ */
-
+/* Buttons */
 .actions {
   display: flex;
+  align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  animation: slideInUp 0.8s ease-out 0.3s both;
+  margin-bottom: 48px;
 }
 
-/* Solid orange — primary CTA */
-.primaryButton {
-  padding: 14px 28px;
-  background: linear-gradient(135deg, #e85d04 0%, #f97316 100%);
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  background: #e85d04;
   color: #fff;
   border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 220ms ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 6px 20px rgba(232, 93, 4, 0.5);
-  white-space: nowrap;
-}
-
-.primaryButton:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(232, 93, 4, 0.6);
-}
-
-.primaryButton:active {
-  transform: translateY(0);
-}
-
-/* Orange outline — secondary */
-.outlineButton {
-  padding: 14px 28px;
-  background: transparent;
-  color: #f97316;
-  border: 2px solid #f97316;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 220ms ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.outlineButton:hover {
-  background: #f97316;
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(232, 93, 4, 0.4);
-}
-
-.outlineButton:active {
-  transform: translateY(0);
-}
-
-/* White ghost — tertiary */
-.ghostButton {
-  padding: 14px 28px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  border-radius: 12px;
-  font-size: 15px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 220ms ease;
+  transition: background 180ms ease, transform 180ms ease;
   text-decoration: none;
+  font-family: inherit;
+  letter-spacing: -0.1px;
+}
+
+.btnPrimary:hover {
+  background: #d05200;
+  transform: translateY(-1px);
+}
+
+.btnSecondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
+  padding: 12px 24px;
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease;
+  text-decoration: none;
+  font-family: inherit;
+  letter-spacing: -0.1px;
 }
 
-.ghostButton:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.65);
+.btnSecondary:hover {
+  border-color: rgba(255,255,255,0.5);
   color: #fff;
-  transform: translateY(-3px);
+  background: rgba(255,255,255,0.06);
 }
 
-.secondaryButton:active {
-  transform: translateY(-2px);
-}
-
-/* ============================================================================
-   IMAGE CONTENT
-   ============================================================================ */
-
-.imageContent {
-  position: relative;
+/* Stats row */
+.stats {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: slideInRight 0.8s ease-out 0.2s both;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statNum {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+/* Image */
+.imageWrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4/5;
 }
 
 .heroImage {
   width: 100%;
-  max-width: 500px;
-  height: auto;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  transform: rotate(2deg);
-  transition: transform var(--transition-normal);
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.imageContent:hover .heroImage {
-  transform: rotate(0deg) translateY(-4px);
-}
-
-.imageGlow {
+.imageOverlay {
   position: absolute;
-  inset: -30px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 107, 107, 0.3) 0%,
-    transparent 70%
-  );
-  border-radius: 50%;
-  z-index: -1;
-  animation: pulse 3s ease-in-out infinite;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15,15,15,0.5) 0%, transparent 50%);
 }
 
-/* ============================================================================
-   SCROLL INDICATOR
-   ============================================================================ */
-
+/* Scroll indicator */
 .scrollIndicator {
   position: absolute;
-  bottom: var(--space-2xl);
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
-  animation: slideInDown 1s ease-out 0.8s both;
-}
-
-.scrollDot {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  opacity: 0.4;
+  transition: opacity 150ms;
 }
 
-.scrollDot:hover {
-  border-color: var(--color-white);
-  box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+.scrollIndicator:hover { opacity: 0.8; }
+
+.scrollText {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
-.scrollIcon {
-  width: 6px;
-  height: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  border-radius: 3px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 6px 0 0 0;
-  animation: scrollBounce 2s ease-in-out infinite;
-}
-
-.scrollIcon::before {
-  content: '';
-  width: 2px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 2px;
-}
-
-@keyframes scrollBounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(8px);
-  }
-}
-
-/* ============================================================================
-   ANIMATIONS
-   ============================================================================ */
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.5;
-  }
-}
-
-/* ============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================ */
-
-@media (max-width: 1024px) {
-  .content {
-    padding: var(--space-2xl) var(--space-lg);
-  }
-
-  .container {
-    gap: var(--space-2xl);
-  }
-
-  .mainHeading {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-  }
-
-  .description {
-    font-size: var(--font-size-base);
-  }
-
-  .heroImage {
-    max-width: 400px;
-  }
-}
-
-@media (max-width: 768px) {
-  .heroSection {
-    min-height: auto;
-    padding-top: var(--space-2xl);
-  }
-
-  .content {
-    padding: var(--space-2xl) var(--space-md);
-  }
-
-  .container {
+/* Responsive */
+@media (max-width: 900px) {
+  .heroInner {
     grid-template-columns: 1fr;
-    gap: var(--space-2xl);
+    gap: 40px;
+    padding-top: 56px;
+    padding-bottom: 56px;
   }
-
-  .shape1 {
-    display: none;
-  }
-
-  .shape2 {
-    display: none;
-  }
-
-  .shape3 {
-    display: none;
-  }
-
-  .mainHeading {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-  }
-
-  .description {
-    font-size: var(--font-size-base);
-  }
-
-  .actions {
-    gap: var(--space-sm);
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    padding: var(--space-sm) var(--space-lg);
-    font-size: var(--font-size-sm);
-  }
-
-  .imageContent {
-    order: -1;
-    margin-bottom: var(--space-lg);
-  }
-
-  .heroImage {
-    max-width: 100%;
-    transform: rotate(0deg);
-  }
-
-  .imageContent:hover .heroImage {
-    transform: translateY(-4px);
-  }
-
-  .scrollIndicator {
-    display: none;
-  }
+  .imageWrap { aspect-ratio: 16/9; }
 }
 
-@media (max-width: 640px) {
-  .content {
-    padding: var(--space-lg) var(--space-md);
-    min-height: calc(100vh - 70px);
-  }
-
-  .container {
-    gap: var(--space-lg);
-  }
-
-  .subtitle {
-    font-size: var(--font-size-base);
-    letter-spacing: 1px;
-  }
-
-  .mainHeading {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    line-height: 1.2;
-  }
-
-  .description {
-    font-size: var(--font-size-sm);
-  }
-
-  .actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    width: 100%;
-    justify-content: center;
-    padding: var(--space-md) var(--space-lg);
-  }
-
-  .heroImage {
-    max-width: 100%;
-    border-radius: var(--radius-md);
-  }
-
-  .imageGlow {
-    inset: -20px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shape,
-  .subtitle,
-  .mainHeading,
-  .description,
-  .actions,
-  .imageContent,
-  .scrollIndicator,
-  .scrollIcon,
-  .imageGlow {
-    animation: none !important;
-  }
+@media (max-width: 480px) {
+  .heroInner { padding: 40px 20px 56px; }
+  .heading { letter-spacing: -1px; }
+  .stats { gap: 20px; }
+  .actions { gap: 10px; }
+  .btnPrimary, .btnSecondary { padding: 12px 20px; font-size: 13px; }
 }
