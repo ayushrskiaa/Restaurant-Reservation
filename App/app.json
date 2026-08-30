@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Rskiaa's",
+    "slug": "rskiaa-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#14161a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rskiaa.app",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
+    },
+    "android": {
+      "package": "com.rskiaa.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#14161a"
+      },
+      "usesCleartextTraffic": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "webAppUrl": "https://restaurant-reservation-self-five.vercel.app",
+      "apiHosts": [
+        "restaurant-reservation-1jia.onrender.com",
+        "restaurant-reservation-1jia.onrender.com"
+      ],
+      "eas": {
+        "projectId": "d0e0e448-1705-44da-a3f5-bd9b7db560ff"
+      }
+    }
+  }
+}

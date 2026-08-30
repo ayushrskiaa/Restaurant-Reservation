@@ -1,0 +1,29 @@
+{
+  "name": "rskiaa-app",
+  "version": "1.0.0",
+  "description": "React Native wrapper (WebView) for the Rskiaa's Restaurant Reservation web app. Reuses the existing backend as-is.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "doctor": "expo-doctor",
+    "export:android": "expo export --platform android"
+  },
+  "dependencies": {
+    "expo": "~57.0.18",
+    "expo-constants": "~57.0.16",
+    "expo-dev-client": "~57.0.16",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-webview": "13.16.1"
+  },
+  "devDependencies": {
+    "@expo/ngrok": "^4.1.3",
+    "babel-preset-expo": "~57.0.0",
+    "eas-cli": "^23.0.0"
+  }
+}
